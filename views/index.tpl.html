@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 {{ template "head.tpl.html" . }}
 
@@ -19,24 +19,22 @@
         </div>
         {{ end }}
 
-        <h1 class="text-8xl font-semibold antialiased text-center mb-10 leading-snug">Keep Track of<br><span
-                class="text-accent">Your</span> Coding Time</h1>
-        <p class="text-center text-secondary text-xl my-2">Wakapi is an open-source tool that helps you keep track of the
-            time you have spent coding on different projects in different programming languages and more.<br>Ideal for
-            statistics freaks and anyone else.</p>
+        <h1 class="text-8xl font-semibold antialiased text-center mb-10 leading-snug">记录<br><span
+                class="text-accent">你的</span>编程时光</h1>
+        <p class="text-center text-secondary text-xl my-2">Wakapi 是一个开源工具,帮助你追踪在不同项目、不同编程语言上花费的编码时间。<br>专为统计爱好者和所有开发者设计。</p>
 
         <div class="flex justify-center mt-8 mb-4 space-x-2">
             <a href="setup">
                 <button type="button"
-                        class="btn-primary"><span class="iconify inline" data-icon="ion:rocket"></span> Let's Go!
+                        class="btn-primary"><span class="iconify inline" data-icon="ion:rocket"></span> 开始使用
                 </button>
             </a>
             <a href="https://github.com/muety/wakapi#%EF%B8%8F-how-to-use" target="_blank" rel="noopener noreferrer">
-                <button type="button" class="btn-default"><span class="iconify inline" data-icon="heroicons-solid:server"></span> Get Your Own
+                <button type="button" class="btn-default"><span class="iconify inline" data-icon="heroicons-solid:server"></span> 搭建自己的服务
                 </button>
             </a>
             <a href="https://github.com/sponsors/muety" target="_blank" rel="noopener noreferrer">
-                <button type="button" class="btn-default"><span class="iconify inline" data-icon="bx:bxs-heart"></span> Support Us
+                <button type="button" class="btn-default"><span class="iconify inline" data-icon="bx:bxs-heart"></span> 支持我们
                 </button>
             </a>
             <a href="https://github.com/muety/wakapi" target="_blank" rel="noopener noreferrer">
@@ -47,20 +45,20 @@
         </div>
 
         <p class="text-center text-secondary text-md mt-4 mb-4">
-            This system has tracked a total of </span>
-            {{ range $d := .TotalHours | printf "%d" | toRunes }}
-            <span class="bg-background rounded-sm p-1 border border-muted/50 font-mono text-secondary" style="margin: auto -1px;" title="{{ $.TotalHours }} hours (updated every hour)">{{ $d }}</span>
-            {{ end }}
-            <span class="mx-1">hours of coding from</span>
+            本系统已累计追踪 </span>
             {{ range $d := .TotalUsers | printf "%d" | toRunes }}
-            <span class="bg-background rounded-sm p-1 border border-muted/50 font-mono text-secondary" style="margin: auto -1px;" title="{{ $.TotalUsers }} users (updated every hour)">{{ $d }}</span>
+            <span class="bg-background rounded-sm p-1 border border-muted/50 font-mono text-secondary" style="margin: auto -1px;" title="{{ $.TotalUsers }} 用户(每小时更新)">{{ $d }}</span>
             {{ end }}
-            <span class="ml-1">users.</span>
+            <span class="mx-1">位用户的</span>
+            {{ range $d := .TotalHours | printf "%d" | toRunes }}
+            <span class="bg-background rounded-sm p-1 border border-muted/50 font-mono text-secondary" style="margin: auto -1px;" title="{{ $.TotalHours }} 小时(每小时更新)">{{ $d }}</span>
+            {{ end }}
+            <span class="ml-1">小时编码时间。</span>
         </p>
 
         <div id="online-indicator" class="text-center text-secondary text-md font-semibold flex justify-center items-center gap-2">
             <div class="live-indicator"></div>
-            <span>{{ .CurrentlyOnline }} currently active users</span>
+            <span>{{ .CurrentlyOnline }} 位用户当前在线</span>
         </div>
 
         <div class="flex justify-center my-8">
@@ -68,21 +66,21 @@
         </div>
 
         <div class="flex flex-col items-center mt-10">
-            <h1 class="font-semibold text-3xl text-white m-0">Features</h1>
+            <h1 class="font-semibold text-3xl text-white m-0">功能特性</h1>
             <div class="mt-4 text-lg text-secondary">
                 <ul>
-                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; 100 % free and open-source</li>
-                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; Built by developers for developers</li>
-                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; Fancy statistics and plots</li>
-                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; Public leaderboards</li>
-                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; Cool badges for readmes</li>
-                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; Weekly e-mail reports</li>
-                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; Intuitive REST API</li>
-                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; Compatible with <a href="https://wakatime.com" target="_blank" rel="noopener noreferrer" class="hover:text-foreground">Wakatime</a></li>
-                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; <a href="https://prometheus.io" target="_blank" rel="noopener noreferrer" class="hover:text-foreground">Prometheus</a> metrics</li>
-                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; Lightning fast</li>
-                    <li title="Wakapi.dev is hosted in Germany, none of your data will leave the EU"><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; GDPR-compliant</li>
-                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; Self-hosted</li>
+                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; 100% 免费且开源</li>
+                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; 开发者为开发者打造</li>
+                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; 精美的统计图表</li>
+                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; 公开排行榜</li>
+                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; 炫酷的 README 徽章</li>
+                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; 每周电子邮件报告</li>
+                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; 直观的 REST API</li>
+                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; 兼容 <a href="https://wakatime.com" target="_blank" rel="noopener noreferrer" class="hover:text-foreground">WakaTime</a></li>
+                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; <a href="https://prometheus.io" target="_blank" rel="noopener noreferrer" class="hover:text-foreground">Prometheus</a> 指标支持</li>
+                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; 超快速度</li>
+                    <li title="Wakapi.dev 托管于德国,你的数据不会离开欧盟"><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; 符合 GDPR 规范</li>
+                    <li><span class="iconify inline text-accent" data-icon="eva:checkmark-circle-2-fill"></span> &nbsp; 可自托管</li>
                 </ul>
             </div>
         </div>

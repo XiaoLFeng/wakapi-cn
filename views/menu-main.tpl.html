@@ -7,33 +7,33 @@
 
     <a class="menu-item" href="summary">
         <span class="iconify inline text-2xl text-secondary" data-icon="ic:round-dashboard"></span>
-        <span class="text-foreground hidden lg:inline-block">Dashboard</span>
+        <span class="text-foreground hidden lg:inline-block">仪表板</span>
     </a>
 
     {{ if .LeaderboardEnabled }}
     <a class="menu-item" href="leaderboard">
         <span class="iconify inline text-2xl text-secondary" data-icon="fluent:data-bar-horizontal-24-filled"></span>
-        <span class="text-foreground hidden lg:inline-block">Leaderboard</span>
+        <span class="text-foreground hidden lg:inline-block">排行榜</span>
     </a>
     {{ end }}
 
     <a class="menu-item" href="projects">
         <span class="iconify inline text-2xl text-secondary p-px" data-icon="octicon:project-16"></span>
-        <span class="text-foreground hidden lg:inline-block">Projects</span>
+        <span class="text-foreground hidden lg:inline-block">项目</span>
     </a>
 
     {{ if false }}
     <div class="menu-item hidden sm:flex imp:cursor-not-allowed">
         <span class="iconify inline text-2xl text-muted" data-icon="bi:people-fill"></span>
-        <a class="text-muted leading-none hidden lg:inline-block">Team<br>
-            <span class="text-xxs whitespace-nowrap">(coming soon)</span>
+        <a class="text-muted leading-none hidden lg:inline-block">团队<br>
+            <span class="text-xxs whitespace-nowrap">(即将推出)</span>
         </a>
     </div>
     {{ end }}
 
     <div class="menu-item relative" @click="state.showDropdownResources = !state.showDropdownResources" data-trigger-for="showDropdownResources">
         <span class="iconify inline text-2xl text-secondary" data-icon="ph:books-bold"></span>
-        <a class="text-secondary hidden lg:inline-block">Resources</a>
+        <a class="text-secondary hidden lg:inline-block">资源</a>
         <span class="iconify inline text-xl text-secondary" data-icon="akar-icons:chevron-down"></span>
 
         <div v-cloak v-show="state.showDropdownResources" class="flex bg-card shadow-md z-10 p-2 absolute top-0 right-0 rounded popup mt-12 w-full" id="resources-menu-dropdown" style="min-width: 128px">
@@ -46,13 +46,13 @@
                 </div>
                 <div class="submenu-item">
                     <a class="flex justify-between w-full text-foreground items-center px-2 font-semibold" href="setup" @click="state.showDropdownResources = !state.showDropdownResources"  data-trigger-for="showDropdownResources">
-                        <span class="text-sm">Initial setup</span>
+                        <span class="text-sm">初始设置</span>
                         <span class="iconify inline" data-icon="ic:outline-integration-instructions"></span>
                     </a>
                 </div>
                 <div class="submenu-item">
                     <a class="flex justify-between w-full text-foreground items-center px-2 font-semibold" href="swagger-ui" @click="state.showDropdownResources = !state.showDropdownResources"  data-trigger-for="showDropdownResources">
-                        <span class="text-sm">API Docs</span>
+                        <span class="text-sm">API 文档</span>
                         <span class="iconify inline" data-icon="bx:bx-code-curly"></span>
                     </a>
                 </div>
@@ -64,7 +64,7 @@
                 </div>
                 <div class="submenu-item">
                     <a class="flex justify-between w-full text-foreground items-center px-2 font-semibold" href="https://github.com/sponsors/muety" target="_blank" rel="noreferrer noopener" @click="state.showDropdownResources = !state.showDropdownResources"  data-trigger-for="showDropdownResources">
-                        <span class="text-sm">Donate</span>
+                        <span class="text-sm">捐赠</span>
                         <span class="iconify inline" data-icon="bx:bxs-heart"></span>
                     </a>
                 </div>
@@ -74,7 +74,7 @@
 
     <a class="menu-item" href="settings">
         <span class="iconify inline text-2xl text-secondary" data-icon="ci:settings-filled"></span>
-        <span class="text-secondary hidden lg:inline-block">Settings</span>
+        <span class="text-secondary hidden lg:inline-block">设置</span>
     </a>
 
     <div class="grow"></div>
@@ -92,7 +92,7 @@
             {{ end }}
         </div>
         {{ if avatarUrlTemplate }}
-        <img src="{{ .SharedLoggedInViewModel.User.AvatarURL avatarUrlTemplate }}" width="32px" class="rounded-full border-accent" alt="User Profile Avatar" title="Looks like you, doesn't it?"/>
+        <img src="{{ .SharedLoggedInViewModel.User.AvatarURL avatarUrlTemplate }}" width="32px" class="rounded-full border-accent" alt="用户头像" title="是不是很像你呢？"/>
         {{ else }}
         <span class="iconify inline cursor-pointer text-secondary rounded-full border-accent" style="width: 32px; height: 32px" data-icon="ic:round-person" @click="state.showDropdownUser = !state.showDropdownUser" data-trigger-for="showDropdownUser"></span>
         {{ end }}
@@ -101,14 +101,14 @@
             <div class="grow flex flex-col">
                 <div class="submenu-item hover:bg-focused rounded p-1 text-right">
                     <button class="flex justify-between w-full text-foreground items-center px-2 font-semibold" @click="state.showApiKey = true" data-trigger-for="showApiKey">
-                        <span class="text-sm">Show API Key</span>
+                        <span class="text-sm">显示 API 密钥</span>
                         <span class="iconify inline" data-icon="fluent:key-32-filled"></span>
                     </button>
                 </div>
                 {{ if .InvitesEnabled }}
                 <div class="submenu-item hover:bg-focused rounded p-1 text-right">
                     <a class="flex justify-between w-full text-foreground items-center px-2 font-semibold" href="settings#account">
-                        <span class="text-sm">Invite Friend</span>
+                        <span class="text-sm">邀请好友</span>
                         <span class="iconify inline" data-icon="mdi:invite"></span>
                     </a>
                 </div>
@@ -116,7 +116,7 @@
                 <div class="submenu-item hover:bg-focused rounded p-1 text-right">
                     <form action="logout" method="post" class="grow">
                         <button type="submit" class="flex justify-between w-full text-foreground items-center px-2 font-semibold">
-                            <span class="text-sm">Logout</span>
+                            <span class="text-sm">退出登录</span>
                             <span class="iconify inline" data-icon="ls:logout"></span>
                         </button>
                     </form>
@@ -127,11 +127,11 @@
 
     <div v-cloak v-show="state.showApiKey" class="flex bg-card shadow-md z-10 p-2 absolute top-0 right-0 rounded popup" id="api-key-popup">
         <div class="grow flex flex-col px-2">
-            <span class="text-xxs text-secondary mx-1">API Key</span>
+            <span class="text-xxs text-secondary mx-1">API 密钥</span>
             <input type="text" class="bg-transparent text-sm text-foreground mx-1 font-mono" id="api-key-container" readonly value="{{ .ApiKey }}" style="min-width: 330px">
         </div>
         <div class="flex items-center px-2 border-l border-muted">
-            <button title="Copy to clipboard" onclick="copyApiKey(event)">
+            <button title="复制到剪贴板" onclick="copyApiKey(event)">
                 <span class="iconify inline text-foreground" data-icon="majesticons:clipboard-copy"></span>
             </button>
         </div>

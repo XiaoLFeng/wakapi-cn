@@ -17,8 +17,8 @@
                             <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
                                 <tr>
                                     <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">
-                                        <p style="font-family: sans-serif; font-size: 18px; font-weight: 500; margin: 0; Margin-bottom: 15px;">WakaTime Connection Failure</p>
-                                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">You have configured Wakapi to relay your heartbeats to WakaTime's API. However, requests for the last {{ .NumFailures }} heartbeats have failed. This is most likely an authentication issue. WakaTime connection is paused for now. To resume it, please re-enter your WakaTime API token under <a href="{{ .PublicUrl }}/settings">Settings</a>.</p>
+                                        <p style="font-family: sans-serif; font-size: 18px; font-weight: 500; margin: 0; Margin-bottom: 15px;">WakaTime 连接失败</p>
+                                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">您已配置 Wakapi 将心跳数据转发到 WakaTime API。但是，最近 {{ .NumFailures }} 次心跳请求均已失败。这很可能是由于身份验证问题导致的。WakaTime 连接现已暂停。如需恢复连接，请在<a href="{{ .PublicUrl }}/settings">设置</a>中重新输入您的 WakaTime API 令牌。</p>
                                         <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; box-sizing: border-box;">
                                             <tbody>
                                             <tr>
@@ -26,7 +26,7 @@
                                                     <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: auto;">
                                                         <tbody>
                                                         <tr>
-                                                            <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; background-color: #2F855A; border-radius: 5px; text-align: center;"> <a href="{{ .PublicUrl }}/settings" target="_blank" style="display: inline-block; color: #ffffff; background-color: #2F855A; border: solid 1px #2F855A; border-radius: 5px; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-transform: capitalize; border-color: #2F855A;">Go to Settings</a> </td>
+                                                            <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; background-color: #2F855A; border-radius: 5px; text-align: center;"> <a href="{{ .PublicUrl }}/settings" target="_blank" style="display: inline-block; color: #ffffff; background-color: #2F855A; border: solid 1px #2F855A; border-radius: 5px; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-transform: capitalize; border-color: #2F855A;">前往设置</a> </td>
                                                         </tr>
                                                         </tbody>
                                                     </table>
