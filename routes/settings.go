@@ -125,7 +125,7 @@ func (h *SettingsHandler) PostIndex(w http.ResponseWriter, r *http.Request) {
 	if actionFunc == nil {
 		slog.Warn("failed to dispatch action", "action", action)
 		w.WriteHeader(http.StatusBadRequest)
-		templates[conf.SettingsTemplate].Execute(w, h.buildViewModel(r, w, nil).WithError("unknown action requests"))
+		templates[conf.SettingsTemplate].Execute(w, h.buildViewModel(r, w, nil).WithError("未知操作请求"))
 		return
 	}
 
@@ -204,18 +204,18 @@ func (h *SettingsHandler) actionUpdateUser(w http.ResponseWriter, r *http.Reques
 
 	var payload models.UserDataUpdate
 	if err := r.ParseForm(); err != nil {
-		return actionResult{http.StatusBadRequest, "", "missing parameters", nil}
+		return actionResult{http.StatusBadRequest, "", "缺少必需参数", nil}
 	}
 	if err := credentialsDecoder.Decode(&payload, r.PostForm); err != nil {
-		return actionResult{http.StatusBadRequest, "", "missing parameters", nil}
+		return actionResult{http.StatusBadRequest, "", "缺少必需参数", nil}
 	}
 
 	if !payload.IsValid() {
-		return actionResult{http.StatusBadRequest, "", "invalid parameters - perhaps invalid e-mail address?", nil}
+		return actionResult{http.StatusBadRequest, "", "参数无效 - 可能是电子邮件地址格式错误？", nil}
 	}
 
 	if payload.Email == "" && user.HasActiveSubscription() {
-		return actionResult{http.StatusBadRequest, "", "cannot unset email while subscription is active", nil}
+		return actionResult{http.StatusBadRequest, "", "订阅处于活跃状态时无法取消设置电子邮件", nil}
 	}
 
 	user.Email = payload.Email
@@ -226,12 +226,12 @@ func (h *SettingsHandler) actionUpdateUser(w http.ResponseWriter, r *http.Reques
 
 	if _, err := h.userSrvc.Update(user); err != nil {
 		if strings.Contains(err.Error(), "email address already in use") {
-			return actionResult{http.StatusBadRequest, "", "got invalid user data (email already taken?)", nil}
+			return actionResult{http.StatusBadRequest, "", "用户数据无效（电子邮件地址可能已被占用？）", nil}
 		}
 		return actionResult{http.StatusInternalServerError, "", conf.ErrInternalServerError, nil}
 	}
 
-	return actionResult{http.StatusOK, "user updated successfully", "", nil}
+	return actionResult{http.StatusOK, "用户更新成功", "", nil}
 }
 
 func (h *SettingsHandler) actionChangePassword(w http.ResponseWriter, r *http.Request) actionResult {
@@ -242,23 +242,23 @@ func (h *SettingsHandler) actionChangePassword(w http.ResponseWriter, r *http.Re
 	user := middlewares.GetPrincipal(r)
 
 	if user.AuthType != "local" {
-		return actionResult{http.StatusBadRequest, "", "cannot reset password for non-local user", nil}
+		return actionResult{http.StatusBadRequest, "", "无法为非本地用户重置密码", nil}
 	}
 
 	var credentials models.CredentialsReset
 	if err := r.ParseForm(); err != nil {
-		return actionResult{http.StatusBadRequest, "", "missing parameters", nil}
+		return actionResult{http.StatusBadRequest, "", "缺少必需参数", nil}
 	}
 	if err := credentialsDecoder.Decode(&credentials, r.PostForm); err != nil {
-		return actionResult{http.StatusBadRequest, "", "missing parameters", nil}
+		return actionResult{http.StatusBadRequest, "", "缺少必需参数", nil}
 	}
 
 	if !utils.ComparePassword(user.Password, credentials.PasswordOld, h.config.Security.PasswordSalt) {
-		return actionResult{http.StatusUnauthorized, "", "invalid credentials", nil}
+		return actionResult{http.StatusUnauthorized, "", "凭据无效", nil}
 	}
 
 	if !credentials.IsValid() {
-		return actionResult{http.StatusBadRequest, "", "invalid parameters", nil}
+		return actionResult{http.StatusBadRequest, "", "参数无效", nil}
 	}
 
 	user.Password = credentials.PasswordNew
@@ -282,7 +282,7 @@ func (h *SettingsHandler) actionChangePassword(w http.ResponseWriter, r *http.Re
 	}
 
 	http.SetCookie(w, h.config.CreateCookie(models.AuthCookieKey, encoded))
-	return actionResult{http.StatusOK, "password was updated successfully", "", nil}
+	return actionResult{http.StatusOK, "密码更新成功", "", nil}
 }
 
 func (h *SettingsHandler) actionChangeUserId(w http.ResponseWriter, r *http.Request) actionResult {
@@ -294,17 +294,17 @@ func (h *SettingsHandler) actionChangeUserId(w http.ResponseWriter, r *http.Requ
 
 	newUserId := strings.TrimSpace(r.PostFormValue("new_userid"))
 	if !models.ValidateUsername(newUserId) || newUserId == user.ID {
-		return actionResult{http.StatusBadRequest, "", "invalid username", nil}
+		return actionResult{http.StatusBadRequest, "", "用户名无效", nil}
 	}
 	if existing, _ := h.userSrvc.GetUserById(newUserId); existing != nil {
-		return actionResult{http.StatusConflict, "", "already taken", nil}
+		return actionResult{http.StatusConflict, "", "已被占用", nil}
 	}
 
 	if _, err := h.userSrvc.ChangeUserId(user, newUserId); err != nil {
 		return actionResult{http.StatusInternalServerError, "", conf.ErrInternalServerError, nil}
 	}
 
-	routeutils.SetSuccess(r, w, fmt.Sprintf("Successfully changed your username to %s, please log back in.", newUserId))
+	routeutils.SetSuccess(r, w, fmt.Sprintf("成功将您的用户名更改为 %s，请重新登录。", newUserId))
 	http.SetCookie(w, h.config.GetClearCookie(models.AuthCookieKey))
 	http.Redirect(w, r, h.config.Server.BasePath, http.StatusFound)
 	return actionResult{-1, "", "", nil}
@@ -320,7 +320,7 @@ func (h *SettingsHandler) actionResetApiKey(w http.ResponseWriter, r *http.Reque
 		return actionResult{http.StatusInternalServerError, "", conf.ErrInternalServerError, nil}
 	}
 
-	msg := fmt.Sprintf("your new api key is: %s", user.ApiKey)
+	msg := fmt.Sprintf("您的新 API 密钥为：%s", user.ApiKey)
 	return actionResult{http.StatusOK, msg, "", nil}
 }
 
@@ -336,12 +336,12 @@ func (h *SettingsHandler) actionUpdateLeaderboard(w http.ResponseWriter, r *http
 	user.PublicLeaderboard, err = strconv.ParseBool(r.PostFormValue("enable_leaderboard"))
 
 	if err != nil {
-		return actionResult{http.StatusBadRequest, "", "invalid input", nil}
+		return actionResult{http.StatusBadRequest, "", "输入无效", nil}
 	}
 	if _, err := h.userSrvc.Update(user); err != nil {
-		return actionResult{http.StatusInternalServerError, "", "internal sever error", nil}
+		return actionResult{http.StatusInternalServerError, "", "服务器内部错误", nil}
 	}
-	return actionResult{http.StatusOK, "settings updated", "", nil}
+	return actionResult{http.StatusOK, "设置已更新", "", nil}
 }
 
 func (h *SettingsHandler) actionUpdateExcludeUnknownProjects(w http.ResponseWriter, r *http.Request) actionResult {
@@ -354,16 +354,16 @@ func (h *SettingsHandler) actionUpdateExcludeUnknownProjects(w http.ResponseWrit
 	defer h.userSrvc.FlushCache()
 
 	if h.isAggregationLocked(user.ID) {
-		return actionResult{http.StatusConflict, "", "summary regeneration already in progress, please wait", nil}
+		return actionResult{http.StatusConflict, "", "摘要重新生成正在进行中，请稍候", nil}
 	}
 
 	user.ExcludeUnknownProjects, err = strconv.ParseBool(r.PostFormValue("exclude_unknown_projects"))
 
 	if err != nil {
-		return actionResult{http.StatusBadRequest, "", "invalid input", nil}
+		return actionResult{http.StatusBadRequest, "", "输入无效", nil}
 	}
 	if _, err := h.userSrvc.Update(user); err != nil {
-		return actionResult{http.StatusInternalServerError, "", "internal sever error", nil}
+		return actionResult{http.StatusInternalServerError, "", "服务器内部错误", nil}
 	}
 
 	go func(user *models.User, r *http.Request) {
@@ -374,7 +374,7 @@ func (h *SettingsHandler) actionUpdateExcludeUnknownProjects(w http.ResponseWrit
 		}
 	}(user, r)
 
-	return actionResult{http.StatusOK, "regenerating summaries, this might take a while", "", nil}
+	return actionResult{http.StatusOK, "正在重新生成摘要，这可能需要一段时间", "", nil}
 }
 
 func (h *SettingsHandler) actionUpdateHeartbeatsTimeout(w http.ResponseWriter, r *http.Request) actionResult {
@@ -389,15 +389,15 @@ func (h *SettingsHandler) actionUpdateHeartbeatsTimeout(w http.ResponseWriter, r
 	val, err := strconv.ParseInt(r.PostFormValue("heartbeats_timeout"), 0, 0)
 	dur := time.Duration(val) * time.Minute
 	if err != nil || dur < models.MinHeartbeatsTimeout || dur > models.MaxHeartbeatsTimeout {
-		return actionResult{http.StatusBadRequest, "", "invalid input", nil}
+		return actionResult{http.StatusBadRequest, "", "输入无效", nil}
 	}
 	user.HeartbeatsTimeoutSec = int(dur.Seconds())
 
 	if _, err := h.userSrvc.Update(user); err != nil {
-		return actionResult{http.StatusInternalServerError, "", "internal sever error", nil}
+		return actionResult{http.StatusInternalServerError, "", "服务器内部错误", nil}
 	}
 
-	return actionResult{http.StatusOK, "Done. To apply this change to already existing data, please regenerate your summaries.", "", nil}
+	return actionResult{http.StatusOK, "完成。要将此更改应用于现有数据，请重新生成您的摘要。", "", nil}
 }
 
 func (h *SettingsHandler) actionUpdateSharing(w http.ResponseWriter, r *http.Request) actionResult {
@@ -420,14 +420,14 @@ func (h *SettingsHandler) actionUpdateSharing(w http.ResponseWriter, r *http.Req
 	user.ShareDataMaxDays, err = strconv.Atoi(r.PostFormValue("max_days"))
 
 	if err != nil {
-		return actionResult{http.StatusBadRequest, "", "invalid input", nil}
+		return actionResult{http.StatusBadRequest, "", "输入无效", nil}
 	}
 
 	if _, err := h.userSrvc.Update(user); err != nil {
-		return actionResult{http.StatusInternalServerError, "", "internal sever error", nil}
+		return actionResult{http.StatusInternalServerError, "", "服务器内部错误", nil}
 	}
 
-	return actionResult{http.StatusOK, "settings updated", "", nil}
+	return actionResult{http.StatusOK, "设置已更新", "", nil}
 }
 
 func (h *SettingsHandler) actionDeleteAlias(w http.ResponseWriter, r *http.Request) actionResult {
@@ -443,12 +443,12 @@ func (h *SettingsHandler) actionDeleteAlias(w http.ResponseWriter, r *http.Reque
 	}
 
 	if aliases, err := h.aliasSrvc.GetByUserAndKeyAndType(user.ID, aliasKey, uint8(aliasType)); err != nil {
-		return actionResult{http.StatusNotFound, "", "aliases not found", nil}
+		return actionResult{http.StatusNotFound, "", "未找到别名", nil}
 	} else if err := h.aliasSrvc.DeleteMulti(aliases); err != nil {
-		return actionResult{http.StatusInternalServerError, "", "could not delete aliases", nil}
+		return actionResult{http.StatusInternalServerError, "", "无法删除别名", nil}
 	}
 
-	return actionResult{http.StatusOK, "aliases deleted successfully", "", nil}
+	return actionResult{http.StatusOK, "别名删除成功", "", nil}
 }
 
 func (h *SettingsHandler) actionAddAlias(w http.ResponseWriter, r *http.Request) actionResult {
@@ -472,10 +472,10 @@ func (h *SettingsHandler) actionAddAlias(w http.ResponseWriter, r *http.Request)
 
 	if _, err := h.aliasSrvc.Create(alias); err != nil {
 		// TODO: distinguish between bad request, conflict and server error
-		return actionResult{http.StatusBadRequest, "", "invalid input", nil}
+		return actionResult{http.StatusBadRequest, "", "输入无效", nil}
 	}
 
-	return actionResult{http.StatusOK, "alias added successfully", "", nil}
+	return actionResult{http.StatusOK, "别名添加成功", "", nil}
 }
 
 func (h *SettingsHandler) actionAddLabel(w http.ResponseWriter, r *http.Request) actionResult {
@@ -496,7 +496,7 @@ func (h *SettingsHandler) actionAddLabel(w http.ResponseWriter, r *http.Request)
 	}
 
 	for _, label := range labels {
-		msg := "invalid input for project: " + label.ProjectKey
+		msg := "项目输入无效：" + label.ProjectKey
 		if !label.IsValid() {
 			return actionResult{http.StatusBadRequest, "", msg, nil}
 		}
@@ -505,7 +505,7 @@ func (h *SettingsHandler) actionAddLabel(w http.ResponseWriter, r *http.Request)
 			return actionResult{http.StatusBadRequest, "", msg, nil}
 		}
 	}
-	return actionResult{http.StatusOK, "label added to project successfully", "", nil}
+	return actionResult{http.StatusOK, "标签添加到项目成功", "", nil}
 }
 
 func (h *SettingsHandler) actionDeleteLabel(w http.ResponseWriter, r *http.Request) actionResult {
@@ -519,18 +519,18 @@ func (h *SettingsHandler) actionDeleteLabel(w http.ResponseWriter, r *http.Reque
 
 	labels, err := h.projectLabelSrvc.GetByUser(user.ID)
 	if err != nil {
-		return actionResult{http.StatusInternalServerError, "", "could not delete label", nil}
+		return actionResult{http.StatusInternalServerError, "", "无法删除标签", nil}
 	}
 
 	for _, l := range labels {
 		if l.Label == labelKey && l.ProjectKey == labelValue {
 			if err := h.projectLabelSrvc.Delete(l); err != nil {
-				return actionResult{http.StatusInternalServerError, "", "could not delete label", nil}
+				return actionResult{http.StatusInternalServerError, "", "无法删除标签", nil}
 			}
-			return actionResult{http.StatusOK, "label deleted successfully", "", nil}
+			return actionResult{http.StatusOK, "标签删除成功", "", nil}
 		}
 	}
-	return actionResult{http.StatusNotFound, "", "label not found", nil}
+	return actionResult{http.StatusNotFound, "", "未找到标签", nil}
 }
 
 func (h *SettingsHandler) actionDeleteLanguageMapping(w http.ResponseWriter, r *http.Request) actionResult {
@@ -541,21 +541,21 @@ func (h *SettingsHandler) actionDeleteLanguageMapping(w http.ResponseWriter, r *
 	user := middlewares.GetPrincipal(r)
 	id, err := strconv.Atoi(r.PostFormValue("mapping_id"))
 	if err != nil {
-		return actionResult{http.StatusInternalServerError, "", "could not delete mapping", nil}
+		return actionResult{http.StatusInternalServerError, "", "无法删除映射", nil}
 	}
 
 	mapping, err := h.languageMappingSrvc.GetById(uint(id))
 	if err != nil || mapping == nil {
-		return actionResult{http.StatusNotFound, "", "mapping not found", nil}
+		return actionResult{http.StatusNotFound, "", "未找到映射", nil}
 	} else if mapping.UserID != user.ID {
-		return actionResult{http.StatusForbidden, "", "not allowed to delete mapping", nil}
+		return actionResult{http.StatusForbidden, "", "不允许删除此映射", nil}
 	}
 
 	if err := h.languageMappingSrvc.Delete(mapping); err != nil {
-		return actionResult{http.StatusInternalServerError, "", "could not delete mapping", nil}
+		return actionResult{http.StatusInternalServerError, "", "无法删除映射", nil}
 	}
 
-	return actionResult{http.StatusOK, "mapping deleted successfully", "", nil}
+	return actionResult{http.StatusOK, "映射删除成功", "", nil}
 }
 
 func (h *SettingsHandler) actionAddLanguageMapping(w http.ResponseWriter, r *http.Request) actionResult {
@@ -577,10 +577,10 @@ func (h *SettingsHandler) actionAddLanguageMapping(w http.ResponseWriter, r *htt
 	}
 
 	if _, err := h.languageMappingSrvc.Create(mapping); err != nil {
-		return actionResult{http.StatusConflict, "", "mapping already exists", nil}
+		return actionResult{http.StatusConflict, "", "映射已存在", nil}
 	}
 
-	return actionResult{http.StatusOK, "mapping added successfully", "", nil}
+	return actionResult{http.StatusOK, "映射添加成功", "", nil}
 }
 
 func (h *SettingsHandler) actionSetWakatimeApiKey(w http.ResponseWriter, r *http.Request) actionResult {
@@ -597,14 +597,14 @@ func (h *SettingsHandler) actionSetWakatimeApiKey(w http.ResponseWriter, r *http
 
 	// Healthcheck, if a new API key is set, i.e. the feature is activated
 	if (user.WakatimeApiKey == "" && apiKey != "") && !h.validateWakatimeKey(apiKey, apiUrl) {
-		return actionResult{http.StatusBadRequest, "", "failed to connect to WakaTime, API key or endpoint URL invalid?", nil}
+		return actionResult{http.StatusBadRequest, "", "连接 WakaTime 失败，API 密钥或端点 URL 无效？", nil}
 	}
 
 	if _, err := h.userSrvc.SetWakatimeApiCredentials(user, apiKey, apiUrl); err != nil {
 		return actionResult{http.StatusInternalServerError, "", conf.ErrInternalServerError, nil}
 	}
 
-	return actionResult{http.StatusOK, "Wakatime API Key updated successfully", "", nil}
+	return actionResult{http.StatusOK, "WakaTime API 密钥更新成功", "", nil}
 }
 
 func (h *SettingsHandler) actionImportWakatime(w http.ResponseWriter, r *http.Request) actionResult {
@@ -613,12 +613,12 @@ func (h *SettingsHandler) actionImportWakatime(w http.ResponseWriter, r *http.Re
 	}
 
 	if !h.config.App.ImportEnabled {
-		return actionResult{http.StatusForbidden, "", "imports are disabled on this server", nil}
+		return actionResult{http.StatusForbidden, "", "此服务器已禁用导入功能", nil}
 	}
 
 	user := middlewares.GetPrincipal(r)
 	if user.WakatimeApiKey == "" {
-		return actionResult{http.StatusForbidden, "", "not connected to wakatime", nil}
+		return actionResult{http.StatusForbidden, "", "未连接到 WakaTime", nil}
 	}
 
 	useLegacyImporter, _ := strconv.ParseBool(r.PostFormValue("use_legacy_importer"))
@@ -631,7 +631,7 @@ func (h *SettingsHandler) actionImportWakatime(w http.ResponseWriter, r *http.Re
 			return actionResult{
 				http.StatusTooManyRequests,
 				"",
-				fmt.Sprintf("Too many data imports - you are only allowed to request an import every %d minutes.", h.config.App.ImportBackoffMin),
+				fmt.Sprintf("数据导入过于频繁 - 您仅允许每 %d 分钟请求一次导入。", h.config.App.ImportBackoffMin),
 				nil,
 			}
 		}
@@ -641,7 +641,7 @@ func (h *SettingsHandler) actionImportWakatime(w http.ResponseWriter, r *http.Re
 			return actionResult{
 				http.StatusTooManyRequests,
 				"",
-				fmt.Sprintf("Too many data imports - last import ran less than %d hours ago, please wait.", h.config.App.ImportMaxRate),
+				fmt.Sprintf("数据导入过于频繁 - 上次导入在 %d 小时前运行，请稍候。", h.config.App.ImportMaxRate),
 				nil,
 			}
 		}
@@ -722,7 +722,7 @@ func (h *SettingsHandler) actionImportWakatime(w http.ResponseWriter, r *http.Re
 		Value: time.Now().Format(time.RFC822),
 	})
 
-	return actionResult{http.StatusAccepted, "Import started. This will take several minutes. Please check back later.", "", nil}
+	return actionResult{http.StatusAccepted, "导入已开始。这将需要几分钟时间，请稍后查看。", "", nil}
 }
 
 func (h *SettingsHandler) actionRegenerateSummaries(w http.ResponseWriter, r *http.Request) actionResult {
@@ -733,7 +733,7 @@ func (h *SettingsHandler) actionRegenerateSummaries(w http.ResponseWriter, r *ht
 	user := middlewares.GetPrincipal(r)
 
 	if h.isAggregationLocked(user.ID) {
-		return actionResult{http.StatusConflict, "", "summary regeneration already in progress, please wait", nil}
+		return actionResult{http.StatusConflict, "", "摘要重新生成正在进行中，请稍候", nil}
 	}
 
 	go func(user *models.User, r *http.Request) {
@@ -744,7 +744,7 @@ func (h *SettingsHandler) actionRegenerateSummaries(w http.ResponseWriter, r *ht
 		}
 	}(user, r)
 
-	return actionResult{http.StatusAccepted, "summaries are being regenerated - this may take a up to a couple of minutes, please come back later", "", nil}
+	return actionResult{http.StatusAccepted, "摘要正在重新生成 - 这可能需要几分钟时间，请稍后再来", "", nil}
 }
 
 func (h *SettingsHandler) actionClearData(w http.ResponseWriter, r *http.Request) actionResult {
@@ -772,7 +772,7 @@ func (h *SettingsHandler) actionClearData(w http.ResponseWriter, r *http.Request
 		}
 	}(user, r)
 
-	return actionResult{http.StatusAccepted, "deletion in progress, this may take a couple of seconds", "", nil}
+	return actionResult{http.StatusAccepted, "删除进行中，这可能需要几秒钟", "", nil}
 }
 
 func (h *SettingsHandler) actionDeleteUser(w http.ResponseWriter, r *http.Request) actionResult {
@@ -791,7 +791,7 @@ func (h *SettingsHandler) actionDeleteUser(w http.ResponseWriter, r *http.Reques
 		}
 	}(user, r)
 
-	routeutils.SetSuccess(r, w, "Your account will be deleted in a few minutes. Sorry to see you go.")
+	routeutils.SetSuccess(r, w, "您的账户将在几分钟内删除。很遗憾看到您离开。")
 	http.SetCookie(w, h.config.GetClearCookie(models.AuthCookieKey))
 	http.Redirect(w, r, h.config.Server.BasePath, http.StatusFound)
 	return actionResult{-1, "", "", nil}

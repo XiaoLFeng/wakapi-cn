@@ -49,10 +49,10 @@ const (
 	SimpleDateFormat     = "2006-01-02"
 	SimpleDateTimeFormat = "2006-01-02 15:04:05"
 
-	ErrUnauthorized        = "401 unauthorized"
-	ErrBadRequest          = "400 bad request"
-	ErrNotFound            = "404 not found"
-	ErrInternalServerError = "500 internal server error"
+	ErrUnauthorized        = "401 未授权"
+	ErrBadRequest          = "400 请求错误"
+	ErrNotFound            = "404 未找到"
+	ErrInternalServerError = "500 服务器内部错误"
 )
 
 const (
