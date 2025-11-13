@@ -17,10 +17,10 @@
                             <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
                                 <tr>
                                     <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">
-                                        <p style="font-family: sans-serif; font-size: 18px; font-weight: 500; margin: 0; Margin-bottom: 15px;">Your Stats from {{ .Report.From | date }} to {{ .Report.To | date }}</p>
-                                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">You have coded a total of <strong>{{ .Report.Summary.TotalTime | duration }}</strong> between {{ .Report.From | date }} and {{ .Report.To | date }}.</p>
+                                        <p style="font-family: sans-serif; font-size: 18px; font-weight: 500; margin: 0; Margin-bottom: 15px;">您的统计数据（{{ .Report.From | date }} 至 {{ .Report.To | date }}）</p>
+                                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">在 {{ .Report.From | date }} 到 {{ .Report.To | date }} 期间,您总共编写代码 <strong>{{ .Report.Summary.TotalTime | duration }}</strong>。</p>
 
-                                        <p style="font-family: sans-serif; font-size: 16px; font-weight: 500; margin: 0; Margin-bottom: 15px; Margin-top: 30px;">Projects</p>
+                                        <p style="font-family: sans-serif; font-size: 16px; font-weight: 500; margin: 0; Margin-bottom: 15px; Margin-top: 30px;">项目</p>
                                         <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; box-sizing: border-box;">
                                             <tbody>
                                             {{ range $i, $item := .Report.Summary.Projects }}
@@ -33,7 +33,7 @@
                                         </table>
 
                                         {{ if len .Report.DailySummaries }}
-                                        <p style="font-family: sans-serif; font-size: 16px; font-weight: 500; margin: 0; Margin-bottom: 15px; Margin-top: 30px;">Weekdays</p>
+                                        <p style="font-family: sans-serif; font-size: 16px; font-weight: 500; margin: 0; Margin-bottom: 15px; Margin-top: 30px;">每日统计</p>
                                         <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; box-sizing: border-box;">
                                             <tbody>
                                             {{ range $i, $summary := .Report.DailySummaries }}
@@ -46,7 +46,7 @@
                                         </table>
                                         {{ end }}
 
-                                        <p style="font-family: sans-serif; font-size: 16px; font-weight: 500; margin: 0; Margin-bottom: 15px; Margin-top: 30px;">Languages</p>
+                                        <p style="font-family: sans-serif; font-size: 16px; font-weight: 500; margin: 0; Margin-bottom: 15px; Margin-top: 30px;">编程语言</p>
                                         <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; box-sizing: border-box;">
                                             <tbody>
                                             {{ range $i, $item := .Report.Summary.Languages }}
@@ -58,7 +58,7 @@
                                             </tbody>
                                         </table>
 
-                                        <p style="font-family: sans-serif; font-size: 16px; font-weight: 500; margin: 0; Margin-bottom: 15px; Margin-top: 30px;">Editors</p>
+                                        <p style="font-family: sans-serif; font-size: 16px; font-weight: 500; margin: 0; Margin-bottom: 15px; Margin-top: 30px;">编辑器</p>
                                         <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; box-sizing: border-box;">
                                             <tbody>
                                             {{ range $i, $item := .Report.Summary.Editors }}
@@ -70,7 +70,7 @@
                                             </tbody>
                                         </table>
 
-                                        <p style="font-family: sans-serif; font-size: 16px; font-weight: 500; margin: 0; Margin-bottom: 15px; Margin-top: 30px;">Operating Systems</p>
+                                        <p style="font-family: sans-serif; font-size: 16px; font-weight: 500; margin: 0; Margin-bottom: 15px; Margin-top: 30px;">操作系统</p>
                                         <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; box-sizing: border-box;">
                                             <tbody>
                                             {{ range $i, $item := .Report.Summary.OperatingSystems }}
@@ -82,7 +82,7 @@
                                             </tbody>
                                         </table>
 
-                                        <p style="font-family: sans-serif; font-size: 16px; font-weight: 500; margin: 0; Margin-bottom: 15px; Margin-top: 30px;">Machines</p>
+                                        <p style="font-family: sans-serif; font-size: 16px; font-weight: 500; margin: 0; Margin-bottom: 15px; Margin-top: 30px;">设备</p>
                                         <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; box-sizing: border-box;">
                                             <tbody>
                                             {{ range $i, $item := .Report.Summary.Machines }}
@@ -94,7 +94,7 @@
                                             </tbody>
                                         </table>
 
-                                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px; Margin-top: 30px;">If you do not want to receive e-mail reports anymore, please log in to Wakapi.dev and go to <i>Settings</i> to disable them.</p>
+                                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px; Margin-top: 30px;">如果您不想继续接收邮件报告，请登录 Wakapi.dev，在<i>设置</i>中禁用此功能。</p>
                                     </td>
                                 </tr>
                             </table>

@@ -12,49 +12,49 @@
 <main class="mt-10 grow flex justify-center w-full">
     <div class="grow max-w-lg mt-10">
         <div class="mb-8">
-            <h1 class="h1">Welcome!</h1>
-            <span class="text-secondary">Log in to continue using Wakapi. First time? Check out the <a href="setup" class="text-foreground hover:text-secondary">setup instructions</a>.</span>
+            <h1 class="h1">欢迎！</h1>
+            <span class="text-secondary">登录以继续使用 Wakapi。第一次使用？请查看<a href="setup" class="text-foreground hover:text-secondary">配置说明</a>。</span>
         </div>
         <form action="login" method="post">
             <div class="mb-4">
                 <input class="input-default"
                        type="text" id="username" autocomplete="username"
-                       name="username" placeholder="Username" minlength="1" required autofocus>
+                       name="username" placeholder="用户名" minlength="1" required autofocus>
             </div>
             <div class="mb-4">
                 <input class="input-default"
                        type="password" id="password" autocomplete="current-password"
-                       name="password" placeholder="Password" minlength="6" required>
+                       name="password" placeholder="密码" minlength="6" required>
             </div>
             <div class="flex justify-between items-center">
                 <a href="reset-password" class="text-muted text-sm">
-                    Forgot password?
+                    忘记密码？
                 </a>
                 <div class="flex space-x-2">
                     {{ if .AllowSignup }}
                     <a href="signup">
-                        <button type="button" class="btn-default">Sign up</button>
+                        <button type="button" class="btn-default">注册</button>
                     </a>
                     {{ else }}
-                    <a title="The administrator of this instance has disabled sign up.">
-                        <button type="button" class="btn-disabled" disabled> Sign up </button>
+                    <a title="该实例的管理员已禁用注册功能。">
+                        <button type="button" class="btn-disabled" disabled> 注册 </button>
                     </a>
                     {{ end }}
-                    <button type="submit" class="btn-primary">Log in</button>
+                    <button type="submit" class="btn-primary">登录</button>
                 </div>
             </div>
         </form>
 
         {{ if len .OidcProviders }}
         <div class="mt-10">
-            <div class="font-semibold mb-2 text-secondary">Single Sign-On</div>
+            <div class="font-semibold mb-2 text-secondary">单点登录</div>
             {{ range $provider := .OidcProviders }}
             <a href="oidc/{{ $provider.Name | lower }}/login" class="block mb-2">
                 <button type="button" class="btn-default w-full flex items-center gap-2 justify-center">
                     {{ if $.OidcProviderIcon $provider.Name }}
                     <span class="iconify inline text-white text-base" data-icon="{{ ($.OidcProviderIcon $provider.Name) | urlSafe }}"></span>
                     {{ end }}
-                    Login with {{ $provider.DisplayName }}
+                    使用 {{ $provider.DisplayName }} 登录
                 </button>
             </a>
             {{ end }}
