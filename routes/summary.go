@@ -45,7 +45,7 @@ func (h *SummaryHandler) RegisterRoutes(router chi.Router) {
 	r := chi.NewRouter()
 	r.Use(middlewares.NewAuthenticateMiddleware(h.userSrvc).
 		WithRedirectTarget(defaultErrorRedirectTarget()).
-		WithRedirectErrorMessage("unauthorized").Handler,
+		WithRedirectErrorMessage("未授权").Handler,
 	)
 	r.Get("/", h.GetIndex)
 
@@ -77,7 +77,7 @@ func (h *SummaryHandler) GetIndex(w http.ResponseWriter, r *http.Request) {
 	summaryParams, _ := helpers.ParseSummaryParams(r)
 	summary, err, status := su.LoadUserSummary(h.summarySrvc, r)
 	if err != nil {
-		conf.Log().Request(r).Error("failed to load summary", "error", err)
+		conf.Log().Request(r).Error("加载摘要失败", "error", err)
 		w.WriteHeader(status)
 		templates[conf.SummaryTemplate].Execute(w, h.buildViewModel(r, w).WithError(err.Error()))
 		return
@@ -86,14 +86,14 @@ func (h *SummaryHandler) GetIndex(w http.ResponseWriter, r *http.Request) {
 	user := middlewares.GetPrincipal(r)
 	if user == nil {
 		w.WriteHeader(http.StatusUnauthorized)
-		templates[conf.SummaryTemplate].Execute(w, h.buildViewModel(r, w).WithError("unauthorized"))
+		templates[conf.SummaryTemplate].Execute(w, h.buildViewModel(r, w).WithError("未授权"))
 		return
 	}
 
 	// user first data
 	firstData, err := h.heartbeatsSrvc.GetFirstByUser(user)
 	if err != nil {
-		conf.Log().Request(r).Error("error while user's heartbeats range", "user", user.ID, "error", err)
+		conf.Log().Request(r).Error("获取用户心跳范围出错", "user", user.ID, "error", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		templates[conf.SummaryTemplate].Execute(w, h.buildViewModel(r, w).WithError(err.Error()))
 		return
@@ -103,7 +103,7 @@ func (h *SummaryHandler) GetIndex(w http.ResponseWriter, r *http.Request) {
 	if rangeDays := summaryParams.RangeDays(); rangeDays >= dailyStatsMinRangeDays && rangeDays <= dailyStatsMaxRangeDays {
 		dailyStatsSummaries, err := h.fetchSplitSummaries(summaryParams)
 		if err != nil {
-			conf.Log().Request(r).Error("failed to load timeline stats", "error", err)
+			conf.Log().Request(r).Error("加载时间线统计失败", "error", err)
 		} else {
 			timeline = view.NewTimelineViewModel(dailyStatsSummaries)
 		}
@@ -120,7 +120,7 @@ func (h *SummaryHandler) GetIndex(w http.ResponseWriter, r *http.Request) {
 			return s
 		}))
 	} else {
-		conf.Log().Request(r).Error("failed to load hourly breakdown stats", "error", err)
+		conf.Log().Request(r).Error("加载小时统计失败", "error", err)
 	}
 
 	vm := view.SummaryViewModel{
@@ -142,7 +142,7 @@ func (h *SummaryHandler) GetIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := templates[conf.SummaryTemplate].Execute(w, vm); err != nil {
-		conf.Log().Request(r).Error("failed to execute summary template", "error", err)
+		conf.Log().Request(r).Error("摘要模板执行失败", "error", err)
 	}
 }
 

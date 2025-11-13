@@ -95,25 +95,25 @@ func (h *LoginHandler) PostLogin(w http.ResponseWriter, r *http.Request) {
 	var login models.Login
 	if err := r.ParseForm(); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		templates[conf.LoginTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("missing parameters"))
+		templates[conf.LoginTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("参数缺失"))
 		return
 	}
 	if err := loginDecoder.Decode(&login, r.PostForm); err != nil || login.Username == "" || login.Password == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		templates[conf.LoginTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("missing parameters"))
+		templates[conf.LoginTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("参数缺失"))
 		return
 	}
 
 	user, err := h.userSrvc.GetUserById(login.Username)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
-		templates[conf.LoginTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("resource not found"))
+		templates[conf.LoginTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("用户名或密码错误"))
 		return
 	}
 
 	if !utils.ComparePassword(user.Password, login.Password, h.config.Security.PasswordSalt) {
 		w.WriteHeader(http.StatusUnauthorized)
-		templates[conf.LoginTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("invalid credentials"))
+		templates[conf.LoginTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("用户名或密码错误"))
 		return
 	}
 
@@ -155,18 +155,18 @@ func (h *LoginHandler) PostSignup(w http.ResponseWriter, r *http.Request) {
 	var signup models.Signup
 	if err := r.ParseForm(); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		templates[conf.SignupTemplate].Execute(w, h.buildViewModel(r, w, h.config.Security.SignupCaptcha).WithError("missing parameters"))
+		templates[conf.SignupTemplate].Execute(w, h.buildViewModel(r, w, h.config.Security.SignupCaptcha).WithError("参数缺失"))
 		return
 	}
 	if err := signupDecoder.Decode(&signup, r.PostForm); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		templates[conf.SignupTemplate].Execute(w, h.buildViewModel(r, w, h.config.Security.SignupCaptcha).WithError("missing parameters"))
+		templates[conf.SignupTemplate].Execute(w, h.buildViewModel(r, w, h.config.Security.SignupCaptcha).WithError("参数缺失"))
 		return
 	}
 
 	if !h.config.IsDev() && !h.config.Security.AllowSignup && (!h.config.Security.InviteCodes || signup.InviteCode == "") {
 		w.WriteHeader(http.StatusForbidden)
-		templates[conf.SignupTemplate].Execute(w, h.buildViewModel(r, w, h.config.Security.SignupCaptcha).WithError("registration is disabled on this server"))
+		templates[conf.SignupTemplate].Execute(w, h.buildViewModel(r, w, h.config.Security.SignupCaptcha).WithError("此服务器已禁用注册功能"))
 		return
 	}
 
@@ -194,7 +194,7 @@ func (h *LoginHandler) PostSignup(w http.ResponseWriter, r *http.Request) {
 
 	if signup.InviteCode != "" && time.Since(invitedDate) > 24*time.Hour {
 		w.WriteHeader(http.StatusForbidden)
-		templates[conf.SignupTemplate].Execute(w, h.buildViewModel(r, w, h.config.Security.SignupCaptcha).WithError("invite code invalid or expired"))
+		templates[conf.SignupTemplate].Execute(w, h.buildViewModel(r, w, h.config.Security.SignupCaptcha).WithError("邀请码无效或已过期"))
 		return
 	}
 
@@ -202,9 +202,9 @@ func (h *LoginHandler) PostSignup(w http.ResponseWriter, r *http.Request) {
 
 	if !signup.IsValid() {
 		w.WriteHeader(http.StatusBadRequest)
-		errMsg := "invalid parameters"
+		errMsg := "参数无效"
 		if !models.ValidateUsername(signup.Username) {
-			errMsg = "User name is invalid"
+			errMsg = "用户名无效"
 		}
 		templates[conf.SignupTemplate].Execute(w, h.buildViewModel(r, w, h.config.Security.SignupCaptcha).WithError(errMsg))
 		return
@@ -216,16 +216,16 @@ func (h *LoginHandler) PostSignup(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		conf.Log().Request(r).Error("failed to create new user", "error", err)
-		templates[conf.SignupTemplate].Execute(w, h.buildViewModel(r, w, h.config.Security.SignupCaptcha).WithError("failed to create new user (username or e-mail already existing?)"))
+		templates[conf.SignupTemplate].Execute(w, h.buildViewModel(r, w, h.config.Security.SignupCaptcha).WithError("创建用户失败（用户名或邮箱已存在？）"))
 		return
 	}
 	if !created {
 		w.WriteHeader(http.StatusConflict)
-		templates[conf.SignupTemplate].Execute(w, h.buildViewModel(r, w, h.config.Security.SignupCaptcha).WithError("user already existing"))
+		templates[conf.SignupTemplate].Execute(w, h.buildViewModel(r, w, h.config.Security.SignupCaptcha).WithError("用户已存在"))
 		return
 	}
 
-	routeutils.SetSuccess(r, w, "account created successfully")
+	routeutils.SetSuccess(r, w, "账户创建成功")
 	http.Redirect(w, r, h.config.Server.BasePath, http.StatusFound)
 }
 
@@ -245,7 +245,7 @@ func (h *LoginHandler) GetSetPassword(w http.ResponseWriter, r *http.Request) {
 	token := values.Get("token")
 	if token == "" {
 		w.WriteHeader(http.StatusUnauthorized)
-		templates[conf.SetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("invalid or missing token"))
+		templates[conf.SetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("令牌无效或缺失"))
 		return
 	}
 
@@ -265,25 +265,25 @@ func (h *LoginHandler) PostSetPassword(w http.ResponseWriter, r *http.Request) {
 	var setRequest models.SetPasswordRequest
 	if err := r.ParseForm(); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		templates[conf.SetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("missing parameters"))
+		templates[conf.SetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("参数缺失"))
 		return
 	}
 	if err := signupDecoder.Decode(&setRequest, r.PostForm); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		templates[conf.SetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("missing parameters"))
+		templates[conf.SetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("参数缺失"))
 		return
 	}
 
 	user, err := h.userSrvc.GetUserByResetToken(setRequest.Token)
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
-		templates[conf.SetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("invalid token"))
+		templates[conf.SetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("令牌无效"))
 		return
 	}
 
 	if !setRequest.IsValid() {
 		w.WriteHeader(http.StatusBadRequest)
-		templates[conf.SetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("invalid parameters"))
+		templates[conf.SetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("参数无效"))
 		return
 	}
 
@@ -292,7 +292,7 @@ func (h *LoginHandler) PostSetPassword(w http.ResponseWriter, r *http.Request) {
 	if hash, err := utils.HashPassword(user.Password, h.config.Security.PasswordSalt); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		conf.Log().Request(r).Error("failed to set new password", "error", err)
-		templates[conf.SetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("failed to set new password"))
+		templates[conf.SetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("设置新密码失败"))
 		return
 	} else {
 		user.Password = hash
@@ -301,11 +301,11 @@ func (h *LoginHandler) PostSetPassword(w http.ResponseWriter, r *http.Request) {
 	if _, err := h.userSrvc.Update(user); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		conf.Log().Request(r).Error("failed to save new password", "error", err)
-		templates[conf.SetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("failed to save new password"))
+		templates[conf.SetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("保存新密码失败"))
 		return
 	}
 
-	routeutils.SetSuccess(r, w, "password updated successfully")
+	routeutils.SetSuccess(r, w, "密码更新成功")
 	http.Redirect(w, r, fmt.Sprintf("%s/login", h.config.Server.BasePath), http.StatusFound)
 }
 
@@ -316,19 +316,19 @@ func (h *LoginHandler) PostResetPassword(w http.ResponseWriter, r *http.Request)
 
 	if !h.config.Mail.Enabled {
 		w.WriteHeader(http.StatusNotImplemented)
-		templates[conf.ResetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("mailing is disabled on this server"))
+		templates[conf.ResetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("此服务器已禁用邮件功能"))
 		return
 	}
 
 	var resetRequest models.ResetPasswordRequest
 	if err := r.ParseForm(); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		templates[conf.ResetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("missing parameters"))
+		templates[conf.ResetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("参数缺失"))
 		return
 	}
 	if err := resetPasswordDecoder.Decode(&resetRequest, r.PostForm); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		templates[conf.ResetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("missing parameters"))
+		templates[conf.ResetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("参数缺失"))
 		return
 	}
 
@@ -336,14 +336,14 @@ func (h *LoginHandler) PostResetPassword(w http.ResponseWriter, r *http.Request)
 		if user.AuthType != "local" {
 			conf.Log().Request(r).Warn("non-local user tried to reset password", "user", user.ID)
 			w.WriteHeader(http.StatusInternalServerError)
-			templates[conf.ResetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("failed to proceed with password reset"))
+			templates[conf.ResetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("密码重置失败"))
 			return
 		}
 
 		if u, err := h.userSrvc.GenerateResetToken(user); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			conf.Log().Request(r).Error("failed to generate password reset token", "error", err)
-			templates[conf.ResetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("failed to generate password reset token"))
+			templates[conf.ResetPasswordTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("生成密码重置令牌失败"))
 			return
 		} else {
 			go func(user *models.User, r *http.Request) {
@@ -359,7 +359,7 @@ func (h *LoginHandler) PostResetPassword(w http.ResponseWriter, r *http.Request)
 		conf.Log().Request(r).Warn("password reset requested for unregistered address", "email", resetRequest.Email)
 	}
 
-	routeutils.SetSuccess(r, w, "an e-mail was sent to you in case your e-mail address was registered")
+	routeutils.SetSuccess(r, w, "如果您的邮箱地址已注册，您将收到一封邮件")
 	http.Redirect(w, r, h.config.Server.BasePath, http.StatusFound)
 }
 
@@ -387,7 +387,7 @@ func (h *LoginHandler) GetOidcCallback(w http.ResponseWriter, r *http.Request) {
 	// validate oauth state param
 	savedState := routeutils.GetOidcState(r)
 	if state == "" || savedState != state {
-		errMsg := "suspicious operation, got invalid state in oidc callback"
+		errMsg := "可疑操作，OIDC 回调中收到无效的状态"
 		conf.Log().Request(r).Error(errMsg, "saved_state", savedState, "state", state, "provider", provider.Name)
 		routeutils.SetError(r, w, errMsg)
 		http.Redirect(w, r, fmt.Sprintf("%s/login", h.config.Server.BasePath), http.StatusFound)
@@ -398,7 +398,7 @@ func (h *LoginHandler) GetOidcCallback(w http.ResponseWriter, r *http.Request) {
 	// exchange auth code for access token and id token
 	authToken, err := provider.OAuth2.Exchange(r.Context(), code)
 	if err != nil {
-		errMsg := "failed to exchange authorization code for access token"
+		errMsg := "授权码交换失败"
 		conf.Log().Request(r).Error(errMsg, "provider", provider.Name)
 		routeutils.SetError(r, w, errMsg)
 		http.Redirect(w, r, fmt.Sprintf("%s/login", h.config.Server.BasePath), http.StatusFound)
@@ -408,7 +408,7 @@ func (h *LoginHandler) GetOidcCallback(w http.ResponseWriter, r *http.Request) {
 	// extract id token
 	rawIdToken, ok := authToken.Extra("id_token").(string)
 	if !ok {
-		errMsg := "failed to extract id_token"
+		errMsg := "ID 令牌提取失败"
 		conf.Log().Request(r).Error(errMsg, "provider", provider.Name)
 		routeutils.SetError(r, w, errMsg)
 		http.Redirect(w, r, fmt.Sprintf("%s/login", h.config.Server.BasePath), http.StatusFound)
@@ -418,7 +418,7 @@ func (h *LoginHandler) GetOidcCallback(w http.ResponseWriter, r *http.Request) {
 	// verify id token
 	idTokenPayload, err := routeutils.DecodeOidcIdToken(rawIdToken, provider, r.Context())
 	if err != nil || idTokenPayload == nil {
-		errMsg := "failed to verify and decode id_token"
+		errMsg := "ID 令牌验证和解码失败"
 		conf.Log().Request(r).Error(errMsg, "provider", provider.Name, "id_token", rawIdToken) // save to log, because does not grant any access
 		routeutils.SetError(r, w, errMsg)
 		http.Redirect(w, r, fmt.Sprintf("%s/login", h.config.Server.BasePath), http.StatusFound)
@@ -429,14 +429,14 @@ func (h *LoginHandler) GetOidcCallback(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		// create new user account
 		if !h.config.IsDev() && !h.config.Security.AllowSignup {
-			routeutils.SetError(r, w, "registration is disabled on this server")
+			routeutils.SetError(r, w, "此服务器已禁用注册功能")
 			http.Redirect(w, r, fmt.Sprintf("%s/login", h.config.Server.BasePath), http.StatusFound)
 			return
 		}
 
 		signup := models.SignupFromOidcIdToken(idTokenPayload)
 		if !signup.IsValid() {
-			routeutils.SetError(r, w, "invalid parameters (invalid username?)")
+			routeutils.SetError(r, w, "参数无效（用户名无效？）")
 			http.Redirect(w, r, fmt.Sprintf("%s/login", h.config.Server.BasePath), http.StatusFound)
 			return
 		}
@@ -456,7 +456,7 @@ func (h *LoginHandler) GetOidcCallback(w http.ResponseWriter, r *http.Request) {
 		newUser, created, err := h.userSrvc.CreateOrGet(signup, false)
 		if err != nil || !created {
 			conf.Log().Request(r).Error("failed to create new user", "error", err, "provider", signup.OidcProvider, "username", signup.Username, "email", signup.Email)
-			routeutils.SetError(r, w, "failed to create new user (username or e-mail already existing?)")
+			routeutils.SetError(r, w, "创建用户失败（用户名或邮箱已存在？）")
 			http.Redirect(w, r, fmt.Sprintf("%s/login", h.config.Server.BasePath), http.StatusFound)
 			return
 		}
@@ -496,7 +496,7 @@ func (h *LoginHandler) getOidcProvider(w http.ResponseWriter, r *http.Request) *
 	providerName := chi.URLParam(r, "provider")
 	provider, err := conf.GetOidcProvider(providerName)
 	if err != nil {
-		routeutils.SetError(r, w, fmt.Sprintf("oidc provider \"%s\" not registered", providerName))
+		routeutils.SetError(r, w, fmt.Sprintf("OIDC 提供商 \"%s\" 未注册", providerName))
 		http.Redirect(w, r, fmt.Sprintf("%s/login", h.config.Server.BasePath), http.StatusFound)
 		return nil
 	}
@@ -508,7 +508,7 @@ func (h *LoginHandler) finishUserLogin(user *models.User, r *http.Request, w htt
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		conf.Log().Request(r).Error("failed to encode secure cookie", "error", err)
-		templates[conf.LoginTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("internal server error"))
+		templates[conf.LoginTemplate].Execute(w, h.buildViewModel(r, w, false).WithError("服务器内部错误"))
 		return
 	}
 

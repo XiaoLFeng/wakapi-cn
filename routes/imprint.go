@@ -30,7 +30,7 @@ func (h *ImprintHandler) GetImprint(w http.ResponseWriter, r *http.Request) {
 		loadTemplates()
 	}
 
-	text := "failed to load content"
+	text := "加载内容失败"
 	if data, err := h.keyValueSrvc.GetString(models.ImprintKey); err == nil {
 		text = data.Value
 	}

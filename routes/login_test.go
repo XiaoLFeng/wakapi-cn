@@ -148,7 +148,7 @@ func (suite *LoginHandlerTestSuite) TestPostLogin_EmptyLoginForm() {
 
 	suite.UserService.AssertExpectations(suite.T())
 	assert.Equal(suite.T(), http.StatusBadRequest, w.Code)
-	assert.Contains(suite.T(), string(body), "Missing parameters")
+	assert.Contains(suite.T(), string(body), "参数缺失")
 	assert.Empty(suite.T(), w.Header().Get("Set-Cookie"))
 }
 
@@ -169,7 +169,7 @@ func (suite *LoginHandlerTestSuite) TestPostLogin_NonExistingUser() {
 
 	suite.UserService.AssertExpectations(suite.T())
 	assert.Equal(suite.T(), http.StatusNotFound, w.Code)
-	assert.Contains(suite.T(), string(body), "Resource not found")
+	assert.Contains(suite.T(), string(body), "用户名或密码错误")
 	assert.Empty(suite.T(), w.Header().Get("Set-Cookie"))
 }
 
@@ -190,7 +190,7 @@ func (suite *LoginHandlerTestSuite) TestPostLogin_WrongPassword() {
 
 	suite.UserService.AssertExpectations(suite.T())
 	assert.Equal(suite.T(), http.StatusUnauthorized, w.Code)
-	assert.Contains(suite.T(), string(body), "Invalid credentials")
+	assert.Contains(suite.T(), string(body), "用户名或密码错误")
 	assert.Empty(suite.T(), w.Header().Get("Set-Cookie"))
 }
 
@@ -241,7 +241,7 @@ func (suite *LoginHandlerTestSuite) TestPostSignup_InvalidForm() {
 
 	suite.UserService.AssertExpectations(suite.T())
 	assert.Equal(suite.T(), http.StatusBadRequest, w.Code)
-	assert.Contains(suite.T(), string(body), "User name is invalid")
+	assert.Contains(suite.T(), string(body), "用户名无效")
 }
 
 func (suite *LoginHandlerTestSuite) TestPostSignup_ExistingUser() {
@@ -263,7 +263,7 @@ func (suite *LoginHandlerTestSuite) TestPostSignup_ExistingUser() {
 
 	suite.UserService.AssertExpectations(suite.T())
 	assert.Equal(suite.T(), http.StatusConflict, w.Code)
-	assert.Contains(suite.T(), string(body), "User already existing")
+	assert.Contains(suite.T(), string(body), "用户已存在")
 }
 
 func (suite *LoginHandlerTestSuite) TestPostSignup_SignupDisabled() {
@@ -283,7 +283,7 @@ func (suite *LoginHandlerTestSuite) TestPostSignup_SignupDisabled() {
 
 	suite.UserService.AssertExpectations(suite.T())
 	assert.Equal(suite.T(), http.StatusForbidden, w.Code)
-	assert.Contains(suite.T(), string(body), "Registration is disabled on this server")
+	assert.Contains(suite.T(), string(body), "此服务器已禁用注册功能")
 }
 
 func (suite *LoginHandlerTestSuite) TestGetOidcLogin_Redirect() {
@@ -307,7 +307,7 @@ func (suite *LoginHandlerTestSuite) TestGetOidcLogin_NoMatchingProvider() {
 
 	assert.Equal(suite.T(), http.StatusFound, w.Code)
 	assert.Equal(suite.T(), "/login", w.Header().Get("Location"))
-	assert.Equal(suite.T(), "oidc provider \"mock2\" not registered", suite.getSessionError(r))
+	assert.Equal(suite.T(), "OIDC 提供商 \"mock2\" 未注册", suite.getSessionError(r))
 }
 
 func (suite *LoginHandlerTestSuite) TestGetOidcLoginCallback_Success() {
@@ -374,7 +374,7 @@ func (suite *LoginHandlerTestSuite) TestGetOidcLoginCallback_SignupDisabled() {
 
 	suite.UserService.AssertExpectations(suite.T())
 	assert.Equal(suite.T(), http.StatusFound, w.Code)
-	assert.Equal(suite.T(), "registration is disabled on this server", suite.getSessionError(r))
+	assert.Equal(suite.T(), "此服务器已禁用注册功能", suite.getSessionError(r))
 	assert.Equal(suite.T(), "/login", w.Header().Get("Location"))
 	assert.Empty(suite.T(), w.Header().Get("Set-Cookie"))
 }
@@ -390,7 +390,7 @@ func (suite *LoginHandlerTestSuite) TestGetOidcLoginCallback_InvalidState() {
 	suite.Sut.GetOidcCallback(w, r)
 
 	assert.Equal(suite.T(), http.StatusFound, w.Code)
-	assert.Equal(suite.T(), "suspicious operation, got invalid state in oidc callback", suite.getSessionError(r))
+	assert.Equal(suite.T(), "可疑操作，OIDC 回调中收到无效的状态", suite.getSessionError(r))
 	assert.Equal(suite.T(), "/login", w.Header().Get("Location"))
 	assert.Empty(suite.T(), w.Header().Get("Set-Cookie"))
 }
@@ -410,7 +410,7 @@ func (suite *LoginHandlerTestSuite) TestGetOidcLoginCallback_AuthExchangeFailure
 	suite.Sut.GetOidcCallback(w, r)
 
 	assert.Equal(suite.T(), http.StatusFound, w.Code)
-	assert.Equal(suite.T(), "failed to exchange authorization code for access token", suite.getSessionError(r))
+	assert.Equal(suite.T(), "授权码交换失败", suite.getSessionError(r))
 	assert.Equal(suite.T(), "/login", w.Header().Get("Location"))
 	assert.Empty(suite.T(), w.Header().Get("Set-Cookie"))
 }
@@ -428,7 +428,7 @@ func (suite *LoginHandlerTestSuite) TestGetOidcLoginCallback_IdTokenExpired() {
 	suite.Sut.GetOidcCallback(w, r)
 
 	assert.Equal(suite.T(), http.StatusFound, w.Code)
-	assert.Equal(suite.T(), "failed to verify and decode id_token", suite.getSessionError(r))
+	assert.Equal(suite.T(), "ID 令牌验证和解码失败", suite.getSessionError(r))
 	assert.Equal(suite.T(), "/login", w.Header().Get("Location"))
 	assert.Empty(suite.T(), w.Header().Get("Set-Cookie"))
 }
@@ -442,7 +442,7 @@ func (suite *LoginHandlerTestSuite) TestGetOidcLoginCallback_NoMatchingProvider(
 
 	assert.Equal(suite.T(), http.StatusFound, w.Code)
 	assert.Equal(suite.T(), "/login", w.Header().Get("Location"))
-	assert.Equal(suite.T(), "oidc provider \"mock2\" not registered", suite.getSessionError(r))
+	assert.Equal(suite.T(), "OIDC 提供商 \"mock2\" 未注册", suite.getSessionError(r))
 }
 
 // Private utility methods

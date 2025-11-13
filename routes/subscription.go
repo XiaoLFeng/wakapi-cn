@@ -125,13 +125,13 @@ func (h *SubscriptionHandler) PostCheckout(w http.ResponseWriter, r *http.Reques
 
 	user := middlewares.GetPrincipal(r)
 	if user.Email == "" {
-		routeutils.SetError(r, w, "missing e-mail address")
+		routeutils.SetError(r, w, "缺少邮箱地址")
 		http.Redirect(w, r, fmt.Sprintf("%s/settings#subscription", h.config.Server.BasePath), http.StatusFound)
 		return
 	}
 
 	if err := r.ParseForm(); err != nil {
-		routeutils.SetError(r, w, "missing form values")
+		routeutils.SetError(r, w, "缺少表单数据")
 		http.Redirect(w, r, fmt.Sprintf("%s/settings#subscription", h.config.Server.BasePath), http.StatusFound)
 		return
 	}
@@ -159,7 +159,7 @@ func (h *SubscriptionHandler) PostCheckout(w http.ResponseWriter, r *http.Reques
 	session, err := stripeCheckoutSession.New(checkoutParams)
 	if err != nil {
 		conf.Log().Request(r).Error("failed to create stripe checkout session", "error", err)
-		routeutils.SetError(r, w, "something went wrong")
+		routeutils.SetError(r, w, "出了点问题")
 		http.Redirect(w, r, fmt.Sprintf("%s/settings#subscription", h.config.Server.BasePath), http.StatusFound)
 		return
 	}
@@ -174,7 +174,7 @@ func (h *SubscriptionHandler) PostPortal(w http.ResponseWriter, r *http.Request)
 
 	user := middlewares.GetPrincipal(r)
 	if user.StripeCustomerId == "" {
-		routeutils.SetError(r, w, "no subscription found with your e-mail address, please contact us!")
+		routeutils.SetError(r, w, "未找到与您邮箱关联的订阅，请联系我们！")
 		http.Redirect(w, r, fmt.Sprintf("%s/settings#subscription", h.config.Server.BasePath), http.StatusFound)
 		return
 	}
@@ -187,7 +187,7 @@ func (h *SubscriptionHandler) PostPortal(w http.ResponseWriter, r *http.Request)
 	session, err := stripePortalSession.New(portalParams)
 	if err != nil {
 		conf.Log().Request(r).Error("failed to create stripe portal session", "error", err)
-		routeutils.SetError(r, w, "something went wrong")
+		routeutils.SetError(r, w, "出了点问题")
 		http.Redirect(w, r, fmt.Sprintf("%s/settings#subscription", h.config.Server.BasePath), http.StatusFound)
 		return
 	}
@@ -285,7 +285,7 @@ func (h *SubscriptionHandler) PostWebhook(w http.ResponseWriter, r *http.Request
 }
 
 func (h *SubscriptionHandler) GetCheckoutSuccess(w http.ResponseWriter, r *http.Request) {
-	routeutils.SetSuccess(r, w, "you have successfully subscribed to Wakapi!")
+	routeutils.SetSuccess(r, w, "您已成功订阅 Wakapi！")
 	http.Redirect(w, r, fmt.Sprintf("%s/settings", h.config.Server.BasePath), http.StatusFound)
 }
 

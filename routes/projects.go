@@ -13,6 +13,8 @@ import (
 	"time"
 )
 
+const criticalError = "发生了严重错误，深表歉意"
+
 type ProjectsHandler struct {
 	config           *conf.Config
 	userService      services.IUserService
@@ -32,7 +34,7 @@ func (h *ProjectsHandler) RegisterRoutes(router chi.Router) {
 	r.Use(
 		middlewares.NewAuthenticateMiddleware(h.userService).
 			WithRedirectTarget(defaultErrorRedirectTarget()).
-			WithRedirectErrorMessage("unauthorized").Handler,
+			WithRedirectErrorMessage("未授权").Handler,
 	)
 	r.Get("/", h.GetIndex)
 
@@ -52,7 +54,7 @@ func (h *ProjectsHandler) buildViewModel(r *http.Request, w http.ResponseWriter)
 	user := middlewares.GetPrincipal(r)
 	if user == nil { // this should actually never occur, because of auth middleware
 		w.WriteHeader(http.StatusUnauthorized)
-		return h.buildViewModel(r, w).WithError("unauthorized")
+		return h.buildViewModel(r, w).WithError("未授权")
 	}
 
 	pageParams := utils.ParsePageParamsWithDefault(r, 1, 24)

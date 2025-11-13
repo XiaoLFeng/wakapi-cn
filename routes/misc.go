@@ -31,14 +31,14 @@ func (h *MiscHandler) RegisterRoutes(router chi.Router) {
 func (h *MiscHandler) GetUnsubscribe(w http.ResponseWriter, r *http.Request) {
 	token := r.URL.Query().Get("token")
 	if token == "" {
-		routeutils.SetError(r, w, "missing token parameter")
+		routeutils.SetError(r, w, "缺少 token 参数")
 		http.Redirect(w, r, fmt.Sprintf("%s", h.config.Server.BasePath), http.StatusFound)
 		return
 	}
 
 	user, err := h.userSrvc.GetUserByUnsubscribeToken(token)
 	if err != nil {
-		routeutils.SetError(r, w, "invalid token parameter")
+		routeutils.SetError(r, w, "无效的 token 参数")
 		http.Redirect(w, r, fmt.Sprintf("%s", h.config.Server.BasePath), http.StatusFound)
 		return
 	}
@@ -46,11 +46,11 @@ func (h *MiscHandler) GetUnsubscribe(w http.ResponseWriter, r *http.Request) {
 	user.ReportsWeekly = false
 	if _, err := h.userSrvc.Update(user); err != nil {
 		conf.Log().Request(r).Error("failed to unsubscribe user from weekly reports", "user", user.ID, "error", err)
-		routeutils.SetError(r, w, "failed to update user preferences")
+		routeutils.SetError(r, w, "更新用户偏好设置失败")
 		http.Redirect(w, r, fmt.Sprintf("%s", h.config.Server.BasePath), http.StatusFound)
 		return
 	}
 
-	routeutils.SetSuccess(r, w, "successfully unsubscribed from weekly reports")
+	routeutils.SetSuccess(r, w, "成功取消周报订阅")
 	http.Redirect(w, r, fmt.Sprintf("%s", h.config.Server.BasePath), http.StatusFound)
 }

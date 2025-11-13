@@ -38,7 +38,7 @@ func (h *LeaderboardHandler) RegisterRoutes(router chi.Router) {
 
 	authMiddleware := middlewares.NewAuthenticateMiddleware(h.userService)
 	authMiddleware = authMiddleware.WithRedirectTarget(defaultErrorRedirectTarget())
-	authMiddleware = authMiddleware.WithRedirectErrorMessage("unauthorized")
+	authMiddleware = authMiddleware.WithRedirectErrorMessage("未授权")
 	if !h.config.App.LeaderboardRequireAuth {
 		authMiddleware = authMiddleware.WithOptionalFor("/")
 	}
@@ -136,7 +136,7 @@ func (h *LeaderboardHandler) buildViewModel(r *http.Request, w http.ResponseWrit
 		} else {
 			return &view.LeaderboardViewModel{
 				SharedLoggedInViewModel: view.SharedLoggedInViewModel{
-					SharedViewModel: view.NewSharedViewModel(h.config, &view.Messages{Error: fmt.Sprintf("unsupported aggregation '%s'", byParam)}),
+					SharedViewModel: view.NewSharedViewModel(h.config, &view.Messages{Error: fmt.Sprintf("不支持的聚合类型 '%s'", byParam)}),
 				},
 			}
 		}

@@ -29,8 +29,6 @@ import (
 	"github.com/muety/wakapi/utils"
 )
 
-const criticalError = "a critical error has occurred, sorry"
-
 type SettingsHandler struct {
 	config              *conf.Config
 	userSrvc            services.IUserService
@@ -811,12 +809,12 @@ func (h *SettingsHandler) actionGenerateInvite(w http.ResponseWriter, r *http.Re
 		Key:   fmt.Sprintf("%s_%s", conf.KeyInviteCode, inviteCode),
 		Value: fmt.Sprintf("%s,%s", user.ID, time.Now().Format(time.RFC3339)),
 	}); err != nil {
-		return actionResult{http.StatusInternalServerError, "", "failed to generate invite code", nil}
+		return actionResult{http.StatusInternalServerError, "", "邀请码生成失败", nil}
 	}
 
 	return actionResult{
 		http.StatusOK,
-		"Successfully generated new invite code (see below)",
+		"邀请码生成成功（见下方）",
 		"",
 		&map[string]interface{}{
 			valueInviteCode: inviteCode,
