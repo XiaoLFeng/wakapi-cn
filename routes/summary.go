@@ -141,7 +141,9 @@ func (h *SummaryHandler) GetIndex(w http.ResponseWriter, r *http.Request) {
 		HourlyBreakdownFrom: hourlyBreakdownFrom,
 	}
 
-	templates[conf.SummaryTemplate].Execute(w, vm)
+	if err := templates[conf.SummaryTemplate].Execute(w, vm); err != nil {
+		conf.Log().Request(r).Error("failed to execute summary template", "error", err)
+	}
 }
 
 func (h *SummaryHandler) buildViewModel(r *http.Request, w http.ResponseWriter) *view.SummaryViewModel {
