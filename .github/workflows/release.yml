@@ -1,4 +1,4 @@
-name: Release
+name: 发布版本
 
 on:
   release:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   release:
-    name: 'Build, package and release to GitHub'
+    name: '构建、打包并发布到 GitHub'
     strategy:
       fail-fast: false
       matrix:
@@ -31,48 +31,48 @@ jobs:
 
     steps:
 
-    - name: Set up Go 1.x
+    - name: 设置 Go 1.x
       uses: actions/setup-go@v6
       with:
         go-version: ^1.25
         cache: false
       id: go
 
-    - name: Check out code into the Go module directory
+    - name: 检出代码到 Go 模块目录
       uses: actions/checkout@v5
 
-    - name: Set version
+    - name: 设置版本
       shell: bash
       run: |
         (git describe --tags --exact-match \
           || git symbolic-ref -q --short HEAD \
           || git rev-parse --short HEAD) > version.txt 2> /dev/null
 
-    - name: Prepare
+    - name: 准备
       run: |
         mkdir -p dist/ && cd dist/
         cp ../config.default.yml config.yml
 
-    - name: Build
+    - name: 构建
       working-directory: ./dist
       shell: bash
       run: |
         GOOS=${{ matrix.GOOS }} GOARCH=${{ matrix.GOARCH }} CGO_ENABLED=0 GOEXPERIMENT=greenteagc,jsonv2 \
             go build -v -ldflags '-w -s' ../
 
-    - name: Compress working folder (Windows PowerShell)
+    - name: 压缩工作文件夹（Windows PowerShell）
       working-directory: ./dist
       if: "${{ matrix.GOOS == 'windows' }}"
       run: |
         Compress-Archive -Path .\wakapi.exe, .\config.yml -DestinationPath wakapi_${{ matrix.GOOS }}_${{ matrix.GOARCH }}.zip
 
-    - name: Compress working folder
+    - name: 压缩工作文件夹
       working-directory: ./dist
       if: "${{ matrix.GOOS != 'windows' }}"
       run: |
         zip -9 wakapi_${{ matrix.GOOS }}_${{ matrix.GOARCH }}.zip *
 
-    - name: Upload built executable to Release
+    - name: 上传构建的可执行文件到 Release
       uses: softprops/action-gh-release@v2
       with:
         files: ./dist/*.zip
