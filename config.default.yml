@@ -64,8 +64,8 @@ app:
 
   # go time format strings to format human-readable dates
   # for details, check https://pkg.go.dev/time#Time.Format
-  date_format: Mon, 02 Jan 2006
-  datetime_format: Mon, 02 Jan 2006 15:04
+  date_format: 2006年01月02日
+  datetime_format: 2006年01月02日 15:04
 
 db:
   host:                               # leave blank when using sqlite3

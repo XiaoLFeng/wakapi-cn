@@ -474,7 +474,7 @@ function draw(subselection) {
         ? new Chart(timelineCanvas.getContext('2d'), {
             type: 'bar',
             data: {
-                labels: wakapiData.timelineStats.map(day => new Date(day.date).toLocaleDateString()),
+                labels: wakapiData.timelineStats.map(day => new Date(day.date).toLocaleDateString('zh-CN')),
                 datasets: wakapiData.timelineStats
                     .flatMap(day => day.projects.map(project => project.name))
                     .sort()
@@ -542,7 +542,7 @@ function draw(subselection) {
                         let toTime = new Date(fromTime.getTime() + (cur.duration / 1e9 * 1e3))
 
                         // "The values for the first bar of a stack are absolute values, all following values of the same stack must be relative to the end of the previous bar"
-                        data[i] = [+fromTime - pre, +toTime - pre, `${fromTime.toLocaleTimeString()} - ${toTime.toLocaleTimeString()} (${(cur.duration / 1e9).toString().toHHMMSS()})`]
+                        data[i] = [+fromTime - pre, +toTime - pre, `${fromTime.toLocaleTimeString('zh-CN')} - ${toTime.toLocaleTimeString('zh-CN')} (${(cur.duration / 1e9).toString().toHHMMSS()})`]
                         pre = +toTime
                         return {
                             data,
@@ -566,7 +566,7 @@ function draw(subselection) {
                         ticks: {
                             stepSize: 1000 * 60 * 60, // pre hour
                             callback: (value) => {
-                                return new Date(value).toLocaleString([], {
+                                return new Date(value).toLocaleString('zh-CN', {
                                     dateStyle: 'short',
                                     timeStyle: 'short',
                                 })

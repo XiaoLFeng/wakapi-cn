@@ -2,9 +2,10 @@ package helpers
 
 import (
 	"fmt"
-	"github.com/muety/wakapi/config"
 	"strings"
 	"time"
+
+	"github.com/muety/wakapi/config"
 )
 
 // ParseDateTimeTZ attempts to parse the given date string from multiple formats.
@@ -54,5 +55,5 @@ func FmtWakatimeDuration(d time.Duration) string {
 	h := d / time.Hour
 	d -= h * time.Hour
 	m := d / time.Minute
-	return fmt.Sprintf("%d hrs %d mins", h, m)
+	return fmt.Sprintf("%d 时 %d 分", h, m)
 }
