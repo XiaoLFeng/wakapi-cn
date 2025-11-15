@@ -3,6 +3,29 @@
 // waiting for https://github.com/chartjs/Chart.js/discussions/9890
 const LEGEND_CHARACTERS = 20
 
+// 分类名称翻译映射表 (Category Translation Map)
+const categoryTranslations = {
+    'coding': '编码',
+    'browsing': '浏览',
+    'building': '构建',
+    'debugging': '调试',
+    'designing': '设计',
+    'manual testing': '手动测试',
+    'running tests': '运行测试',
+    'writing tests': '编写测试',
+    'write tests': '编写测试',
+    'write docs': '编写文档',
+    'code reviewing': '代码审查',
+    'communicating': '沟通',
+    'researching': '研究',
+    'learning': '学习'
+};
+
+// 翻译分类名称函数
+function translateCategory(category) {
+    return categoryTranslations[category] || category;
+}
+
 const projectsCanvas = document.getElementById('chart-projects')
 const osCanvas = document.getElementById('chart-os')
 const editorsCanvas = document.getElementById('chart-editor')
@@ -79,8 +102,8 @@ function draw(subselection) {
                         : [item.chart.data.datasets[item.datasetIndex].data[item.dataIndex], item.chart.data.labels[item.dataIndex]]
                     return ` ${d[1]}: ${d[0].toString().toHHMMSS()}`
                 },
-                title: () => 'Total Time',
-                footer: () => key === 'projects' ? 'Click for details' : null
+                title: () => '总计时间',
+                footer: () => key === 'projects' ? '点击查看详情' : null
             }
         }
     }
@@ -437,7 +460,7 @@ function draw(subselection) {
                 datasets: wakapiData.categories
                     .slice(0, Math.min(showTopN[8], wakapiData.categories.length))
                     .map((p, i) => ({
-                        label: p.key,
+                        label: translateCategory(p.key),
                         data: [parseInt(p.total)],
                         backgroundColor: vibrantColors ? getRandomColor(p.key) : getColor(p.key, i % baseColors.length),
                         barPercentage: 1.0
