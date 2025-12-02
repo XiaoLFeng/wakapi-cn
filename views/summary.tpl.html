@@ -124,7 +124,7 @@
 
         <div class="grid gap-2 grid-cols-1 md:grid-cols-3 w-full mt-4">
             <!-- Projects -->
-            <div class="row-span-1 col-span-1 md:col-span-2 md:row-span-2 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break {{ if .IsProjectDetails }} hidden {{ end }}" id="project-container" style="max-height: 608px;">
+            <div class="row-span-1 col-span-1 md:col-span-2 md:row-span-4 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break {{ if .IsProjectDetails }} hidden {{ end }}" id="project-container" style="max-height: 820px;">
                 <div class="flex justify-between">
                     <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap">项目</span>
                     <div class="flex justify-end flex-1 text-xs items-center">
@@ -142,7 +142,7 @@
             </div>
 
             <!-- Branches -->
-            <div class="row-span-1 col-span-1 md:col-span-2 md:row-span-2 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break {{ if not .IsProjectDetails }} hidden {{ end }}" id="branch-container" style="max-height: 608px;">
+            <div class="row-span-1 col-span-1 md:col-span-2 md:row-span-4 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break {{ if not .IsProjectDetails }} hidden {{ end }}" id="branch-container" style="max-height: 820px;">
                 <div class="flex justify-between">
                     <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap">分支</span>
                     <div class="flex justify-end flex-1 text-xs items-center">
@@ -158,7 +158,7 @@
             </div>
 
             <!-- Languages -->
-            <div class="row-span-1 col-span-1 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="language-container" style="height: 200px">
+            <div class="row-span-1 col-span-1 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="language-container" style="height: 180px">
                 <div class="flex justify-between">
                     <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap">编程语言</span>
                     <div class="flex justify-end flex-1 text-xs items-center">
@@ -174,7 +174,7 @@
             </div>
 
             <!-- Editors -->
-            <div class="row-span-1 col-span-1 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="editor-container" style="height: 200px">
+            <div class="row-span-1 col-span-1 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="editor-container" style="height: 180px">
                 <div class="flex justify-between">
                     <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap">编辑器</span>
                     <div class="flex justify-end flex-1 text-xs items-center">
@@ -190,7 +190,7 @@
             </div>
 
             <!-- OS -->
-            <div class="{{ if .IsProjectDetails }} hidden {{ end }} row-span-1 col-span-1 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="os-container" style="height: 200px">
+            <div class="{{ if .IsProjectDetails }} hidden {{ end }} row-span-1 col-span-1 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="os-container" style="height: 180px">
                 <div class="flex justify-between">
                     <div>
                         <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap mr-1 cursor-pointer">操作系统</span>
@@ -209,7 +209,7 @@
             </div>
 
             <!-- Machines -->
-            <div class="hidden row-span-1 col-span-1 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="machine-container" style="height: 200px">
+            <div class="hidden row-span-1 col-span-1 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="machine-container" style="height: 180px">
                 <div class="flex justify-between">
                     <div>
                         <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap mr-1 cursor-pointer text-muted" onclick="swapCharts('os', 'machine')">操作系统</span>
@@ -228,7 +228,7 @@
             </div>
 
             <!-- Labels -->
-            <div class="{{ if .IsProjectDetails }} hidden {{ end }} row-span-1 col-span-1 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="label-container" style="height: 200px">
+            <div class="{{ if .IsProjectDetails }} hidden {{ end }} row-span-1 col-span-1 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="label-container" style="height: 180px">
                 <div class="flex justify-between text-lg" style="margin-bottom: -10px">
                     <span class="font-semibold whitespace-nowrap">标签</span>
                     <a href="settings#data" class="ml-4 inline p-2 hover:bg-focused rounded" style="margin-top: -5px">
@@ -285,7 +285,7 @@
             </div>
 
             <!-- Timeline -->
-            <div class="row-span-1 col-span-1 md:col-span-3 md:row-span-3 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="timeline-container" style="max-height: {{ if .SharedLoggedInViewModel.User.NewSummary }}400px{{ else }}224px{{ end }};">
+            <div class="row-span-1 col-span-1 md:col-span-3 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="timeline-container" style="height: {{ if .SharedLoggedInViewModel.User.NewSummary }}450px{{ else }}280px{{ end }};">
                 <div class="flex justify-between">
                     <div class="flex items-center gap-x-2">
                         <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap">时间线</span>
@@ -304,7 +304,7 @@
             </div>
 
             <!-- Hourly Breakdown -->
-            <div class="row-span-1 col-span-1 md:col-span-3 md:row-span-3 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break cursor-move" id="hourly-container" style="max-height: {{ if .SharedLoggedInViewModel.User.NewSummary }}400px{{ else }}224px{{ end }};">
+            <div class="row-span-1 col-span-1 md:col-span-3 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break cursor-move" id="hourly-container" style="height: {{ if .SharedLoggedInViewModel.User.NewSummary }}450px{{ else }}280px{{ end }};">
                 <div class="flex justify-between">
                     <div class="flex items-center gap-x-2">
                         <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap">
@@ -314,8 +314,8 @@
                               title="此图表仅显示所选时间间隔内的最后 24 小时。使用 Ctrl + 滚轮缩放，按住并拖动。"></span>
                     </div>
                 </div>
-                <div class="mt-2 flex-1 overflow-y-auto">
-                    <canvas id="chart-hourly"></canvas>
+                <div class="mt-2 flex-grow relative" style="min-height: {{ if .SharedLoggedInViewModel.User.NewSummary }}350px{{ else }}180px{{ end }};">
+                    <canvas id="chart-hourly" class="absolute inset-0 w-full h-full"></canvas>
                 </div>
                 <div class="hidden placeholder-container flex items-center justify-center h-full flex-col">
                     <span class="text-md font-semibold text-muted mt-4">无数据</span>
