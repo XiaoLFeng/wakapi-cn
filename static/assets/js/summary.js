@@ -10,15 +10,13 @@ const categoryTranslations = {
     'building': '构建',
     'debugging': '调试',
     'designing': '设计',
-    'manual testing': '手动测试',
-    'running tests': '运行测试',
     'writing tests': '编写测试',
-    'write tests': '编写测试',
-    'write docs': '编写文档',
+    'writing docs': '编写文档',
     'code reviewing': '代码审查',
     'communicating': '沟通',
     'researching': '研究',
-    'learning': '学习'
+    'learning': '学习',
+    'unknown': '其他',
 };
 
 // 翻译分类名称函数

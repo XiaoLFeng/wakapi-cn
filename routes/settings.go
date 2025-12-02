@@ -191,6 +191,8 @@ func (h *SettingsHandler) dispatchAction(action string) action {
 		return h.actionUpdateExcludeUnknownProjects
 	case "update_heartbeats_timeout":
 		return h.actionUpdateHeartbeatsTimeout
+	case "update_new_summary":
+		return h.actionUpdateNewSummary
 	}
 	return nil
 }
@@ -398,6 +400,27 @@ func (h *SettingsHandler) actionUpdateHeartbeatsTimeout(w http.ResponseWriter, r
 	}
 
 	return actionResult{http.StatusOK, "完成。要将此更改应用于现有数据，请重新生成您的摘要。", "", nil}
+}
+
+func (h *SettingsHandler) actionUpdateNewSummary(w http.ResponseWriter, r *http.Request) actionResult {
+	if h.config.IsDev() {
+		loadTemplates()
+	}
+
+	user := middlewares.GetPrincipal(r)
+	defer h.userSrvc.FlushCache()
+
+	val, err := strconv.ParseBool(r.PostFormValue("new_summary"))
+	if err != nil {
+		return actionResult{http.StatusBadRequest, "", "输入无效", nil}
+	}
+
+	user.NewSummary = val
+	if _, err := h.userSrvc.Update(user); err != nil {
+		return actionResult{http.StatusInternalServerError, "", "服务器内部错误", nil}
+	}
+
+	return actionResult{http.StatusOK, "摘要界面设置已更新", "", nil}
 }
 
 func (h *SettingsHandler) actionUpdateSharing(w http.ResponseWriter, r *http.Request) actionResult {
