@@ -716,8 +716,8 @@ function hexToRgb(hex) {
 }
 
 function swapCharts(showEntity, hideEntity) {
-    document.getElementById(`${showEntity}-container`).parentElement.classList.remove('hidden')
-    document.getElementById(`${hideEntity}-container`).parentElement.classList.add('hidden')
+    document.getElementById(`${showEntity}-container`).classList.remove('hidden')
+    document.getElementById(`${hideEntity}-container`).classList.add('hidden')
 }
 
 function extractFile(filePath) {

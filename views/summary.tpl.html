@@ -158,7 +158,7 @@
             </div>
 
             <!-- Languages -->
-            <div class="row-span-1 col-span-1 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="language-container" style="max-height: 200px">
+            <div class="row-span-1 col-span-1 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="language-container" style="height: 200px">
                 <div class="flex justify-between">
                     <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap">编程语言</span>
                     <div class="flex justify-end flex-1 text-xs items-center">
@@ -174,7 +174,7 @@
             </div>
 
             <!-- Editors -->
-            <div class="row-span-1 col-span-1 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="editor-container" style="max-height: 200px">
+            <div class="row-span-1 col-span-1 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="editor-container" style="height: 200px">
                 <div class="flex justify-between">
                     <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap">编辑器</span>
                     <div class="flex justify-end flex-1 text-xs items-center">
@@ -190,65 +190,59 @@
             </div>
 
             <!-- OS -->
-            <div class="{{ if .IsProjectDetails }} hidden {{ end }} row-span-1 col-span-1 w-full no-break">
-                <div class="p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full" id="os-container" style="max-height: 200px">
-                    <div class="flex justify-between">
-                        <div>
-                            <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap mr-1 cursor-pointer">操作系统</span>
-                            <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap ml-1 cursor-pointer text-muted" onclick="swapCharts('machine', 'os')">设备</span>
-                        </div>
-                        <div class="flex justify-end flex-1 text-xs items-center">
-                            <span class="mr-1">前 </span>
-                            <input type="number" min="1" id="os-top-picker" data-entity="1" class="top-picker bg-focused rounded-md text-center w-12" value="10">
-                            <span class="ml-1">/ <span class="num-total-items" data-entity="1"></span></span>
-                        </div>
+            <div class="{{ if .IsProjectDetails }} hidden {{ end }} row-span-1 col-span-1 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="os-container" style="height: 200px">
+                <div class="flex justify-between">
+                    <div>
+                        <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap mr-1 cursor-pointer">操作系统</span>
+                        <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap ml-1 cursor-pointer text-muted" onclick="swapCharts('machine', 'os')">设备</span>
                     </div>
-                    <canvas id="chart-os" class="mt-4"></canvas>
-                    <div class="hidden placeholder-container flex items-center justify-center h-full flex-col">
-                        <span class="text-md font-semibold text-muted mt-4">无数据</span>
+                    <div class="flex justify-end flex-1 text-xs items-center">
+                        <span class="mr-1">前 </span>
+                        <input type="number" min="1" id="os-top-picker" data-entity="1" class="top-picker bg-focused rounded-md text-center w-12" value="10">
+                        <span class="ml-1">/ <span class="num-total-items" data-entity="1"></span></span>
                     </div>
+                </div>
+                <canvas id="chart-os" class="mt-4"></canvas>
+                <div class="hidden placeholder-container flex items-center justify-center h-full flex-col">
+                    <span class="text-md font-semibold text-muted mt-4">无数据</span>
                 </div>
             </div>
 
             <!-- Machines -->
-            <div class="hidden row-span-1 col-span-1 w-full no-break">
-                <div class="p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full" id="machine-container" style="max-height: 200px">
-                    <div class="flex justify-between">
-                        <div>
-                            <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap mr-1 cursor-pointer text-muted" onclick="swapCharts('os', 'machine')">操作系统</span>
-                            <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap ml-1 cursor-pointer">设备</span>
-                        </div>
-                        <div class="flex justify-end flex-1 text-xs items-center">
-                            <span class="mr-1">前 </span>
-                            <input type="number" min="1" id="machine-top-picker" data-entity="4" class="top-picker bg-focused rounded-md text-center w-12" value="10">
-                            <span class="ml-1">/ <span class="num-total-items" data-entity="4"></span></span>
-                        </div>
+            <div class="hidden row-span-1 col-span-1 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="machine-container" style="height: 200px">
+                <div class="flex justify-between">
+                    <div>
+                        <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap mr-1 cursor-pointer text-muted" onclick="swapCharts('os', 'machine')">操作系统</span>
+                        <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap ml-1 cursor-pointer">设备</span>
                     </div>
-                    <canvas id="chart-machine" class="mt-4"></canvas>
-                    <div class="hidden placeholder-container flex items-center justify-center h-full flex-col">
-                        <span class="text-md font-semibold text-muted mt-4">无数据</span>
+                    <div class="flex justify-end flex-1 text-xs items-center">
+                        <span class="mr-1">前 </span>
+                        <input type="number" min="1" id="machine-top-picker" data-entity="4" class="top-picker bg-focused rounded-md text-center w-12" value="10">
+                        <span class="ml-1">/ <span class="num-total-items" data-entity="4"></span></span>
                     </div>
+                </div>
+                <canvas id="chart-machine" class="mt-4"></canvas>
+                <div class="hidden placeholder-container flex items-center justify-center h-full flex-col">
+                    <span class="text-md font-semibold text-muted mt-4">无数据</span>
                 </div>
             </div>
 
             <!-- Labels -->
-            <div class="{{ if .IsProjectDetails }} hidden {{ end }} row-span-1 col-span-1 w-full no-break">
-                <div class="p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full {{ if .IsProjectDetails }} hidden {{ end }}" id="label-container" style="max-height: 200px">
-                    <div class="flex justify-between text-lg" style="margin-bottom: -10px">
-                        <span class="font-semibold whitespace-nowrap">标签</span>
-                        <a href="settings#data" class="ml-4 inline p-2 hover:bg-focused rounded" style="margin-top: -5px">
-                            <span class="iconify inline" data-icon="twemoji:gear"></span>
-                        </a>
-                        <div class="flex justify-end flex-1 text-xs items-center">
-                            <span class="mr-1">前 </span>
-                            <input type="number" min="1" id="label-top-picker" data-entity="5" class="top-picker bg-focused rounded-md text-center w-12" value="10">
-                            <span class="ml-1">/ <span class="num-total-items" data-entity="5"></span></span>
-                        </div>
+            <div class="{{ if .IsProjectDetails }} hidden {{ end }} row-span-1 col-span-1 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="label-container" style="height: 200px">
+                <div class="flex justify-between text-lg" style="margin-bottom: -10px">
+                    <span class="font-semibold whitespace-nowrap">标签</span>
+                    <a href="settings#data" class="ml-4 inline p-2 hover:bg-focused rounded" style="margin-top: -5px">
+                        <span class="iconify inline" data-icon="twemoji:gear"></span>
+                    </a>
+                    <div class="flex justify-end flex-1 text-xs items-center">
+                        <span class="mr-1">前 </span>
+                        <input type="number" min="1" id="label-top-picker" data-entity="5" class="top-picker bg-focused rounded-md text-center w-12" value="10">
+                        <span class="ml-1">/ <span class="num-total-items" data-entity="5"></span></span>
                     </div>
-                    <canvas id="chart-label" class="mt-4"></canvas>
-                    <div class="hidden placeholder-container flex items-center justify-center h-full flex-col">
-                        <span class="text-md font-semibold text-muted mt-4">无数据</span>
-                    </div>
+                </div>
+                <canvas id="chart-label" class="mt-4"></canvas>
+                <div class="hidden placeholder-container flex items-center justify-center h-full flex-col">
+                    <span class="text-md font-semibold text-muted mt-4">无数据</span>
                 </div>
             </div>
 
