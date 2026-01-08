@@ -134,8 +134,8 @@
                         <span class="ml-1">/ <span class="num-total-items" data-entity="0"></span></span>
                     </div>
                 </div>
-                <div class="mt-2 flex-1 overflow-y-auto">
-                    <canvas id="chart-projects"></canvas>
+                <div class="mt-2 flex-1 overflow-hidden">
+                    <div id="chart-projects" class="w-full h-full"></div>
                 </div>
                 <div class="hidden placeholder-container flex items-center justify-center h-full flex-col">
                     <span class="text-md font-semibold text-muted mt-4">无数据</span>
@@ -154,7 +154,7 @@
                             <span class="ml-1">/ <span class="num-total-items" data-entity="3"></span></span>
                         </div>
                     </div>
-                    <canvas id="chart-language" class="mt-4"></canvas>
+                    <div id="chart-language" class="w-full h-full mt-4"></div>
                     <div class="hidden placeholder-container flex items-center justify-center h-full flex-col">
                         <span class="text-md font-semibold text-muted mt-4">无数据</span>
                     </div>
@@ -170,7 +170,7 @@
                             <span class="ml-1">/ <span class="num-total-items" data-entity="2"></span></span>
                         </div>
                     </div>
-                    <canvas id="chart-editor" class="mt-4"></canvas>
+                    <div id="chart-editor" class="w-full h-full mt-4"></div>
                     <div class="hidden placeholder-container flex items-center justify-center h-full flex-col">
                         <span class="text-md font-semibold text-muted mt-4">无数据</span>
                     </div>
@@ -189,7 +189,7 @@
                             <span class="ml-1">/ <span class="num-total-items" data-entity="1"></span></span>
                         </div>
                     </div>
-                    <canvas id="chart-os" class="mt-4"></canvas>
+                    <div id="chart-os" class="w-full h-full mt-4"></div>
                     <div class="hidden placeholder-container flex items-center justify-center h-full flex-col">
                         <span class="text-md font-semibold text-muted mt-4">无数据</span>
                     </div>
@@ -208,7 +208,7 @@
                             <span class="ml-1">/ <span class="num-total-items" data-entity="4"></span></span>
                         </div>
                     </div>
-                    <canvas id="chart-machine" class="mt-4"></canvas>
+                    <div id="chart-machine" class="w-full h-full mt-4"></div>
                     <div class="hidden placeholder-container flex items-center justify-center h-full flex-col">
                         <span class="text-md font-semibold text-muted mt-4">无数据</span>
                     </div>
@@ -227,7 +227,7 @@
                             <span class="ml-1">/ <span class="num-total-items" data-entity="5"></span></span>
                         </div>
                     </div>
-                    <canvas id="chart-label" class="mt-4"></canvas>
+                    <div id="chart-label" class="w-full h-full mt-4"></div>
                     <div class="hidden placeholder-container flex items-center justify-center h-full flex-col">
                         <span class="text-md font-semibold text-muted mt-4">无数据</span>
                     </div>
@@ -238,7 +238,7 @@
         <!-- 项目详情模式: 分支 + 文件 (保持原 grid 布局) -->
         <div class="grid gap-2 grid-cols-1 md:grid-cols-3 w-full mt-4 {{ if not .IsProjectDetails }} hidden {{ end }}">
             <!-- Branches -->
-            <div class="row-span-1 col-span-1 md:col-span-2 md:row-span-2 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="branch-container" style="max-height: 608px;">
+            <div class="row-span-1 col-span-1 md:col-span-2 md:row-span-2 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="branch-container" style="height: 500px;">
                 <div class="flex justify-between">
                     <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap">分支</span>
                     <div class="flex justify-end flex-1 text-xs items-center">
@@ -247,14 +247,14 @@
                         <span class="ml-1">/ <span class="num-total-items" data-entity="6"></span></span>
                     </div>
                 </div>
-                <canvas id="chart-branches" class="mt-2"></canvas>
+                <div id="chart-branches" class="w-full h-full mt-2"></div>
                 <div class="hidden placeholder-container flex items-center justify-center h-full flex-col">
                     <span class="text-md font-semibold text-muted mt-4">无数据</span>
                 </div>
             </div>
 
             <!-- Files -->
-            <div class="row-span-1 col-span-1 md:col-span-1 md:row-span-2 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="entity-container" style="max-height: 500px">
+            <div class="row-span-1 col-span-1 md:col-span-1 md:row-span-2 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break" id="entity-container" style="height: 500px">
                 <div class="flex justify-between">
                     <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap">文件</span>
                     <div class="flex justify-end flex-1 text-xs items-center">
@@ -263,7 +263,7 @@
                         <span class="ml-1">/ <span class="num-total-items" data-entity="7"></span></span>
                     </div>
                 </div>
-                <canvas id="chart-entities" class="mt-4"></canvas>
+                <div id="chart-entities" class="w-full h-full mt-4"></div>
                 <div class="hidden placeholder-container flex items-center justify-center h-full flex-col">
                     <span class="text-md font-semibold text-muted mt-4">无数据</span>
                 </div>
@@ -271,8 +271,8 @@
         </div>
 
         <!-- 其余图表: 分类、时间线、每小时统计 -->
-        <div class="grid gap-2 grid-cols-1 w-full mt-2">
-            <div class="row-span-1 col-span-1 md:col-span-3 md:row-span-3 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break {{ if .IsProjectDetails }} hidden {{ end }}" id="category-container" style="max-height: 224px; margin-top: -8px;">
+        <div class="grid gap-2 grid-cols-1 md:grid-cols-3 w-full mt-2">
+            <div class="row-span-1 col-span-1 md:col-span-3 md:row-span-3 p-4 px-6 pb-10 bg-card text-foreground rounded-md shadow flex flex-col w-full no-break {{ if .IsProjectDetails }} hidden {{ end }}" id="category-container" style="height: 200px; margin-top: -8px;">
                 <div class="flex justify-between">
                     <div class="flex items-center gap-x-2">
                         <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap">分类</span>
@@ -287,7 +287,7 @@
                         <span class="ml-1">/ <span class="num-total-items" data-entity="8"></span></span>
                     </div>
                 </div>
-                <canvas id="chart-categories" class="mt-2"></canvas>
+                <div id="chart-categories" class="w-full h-full mt-2"></div>
                 <div class="hidden placeholder-container flex items-center justify-center h-full flex-col">
                     <span class="text-md font-semibold text-muted mt-4">无数据</span>
                 </div>
@@ -300,7 +300,7 @@
                         <span class="font-semibold text-lg w-1/2 flex-1 whitespace-nowrap">时间线</span>
                     </div>
                 </div>
-                <canvas id="chart-timeline" class="mt-2"></canvas>
+                <div id="chart-timeline" class="w-full h-full mt-2"></div>
                 <div class="hidden placeholder-container flex items-center justify-center h-full flex-col">
                     {{ if lt .SummaryParams.RangeDays 3 }}
                     <span class="text-md font-semibold text-muted mt-4">仅适用于 >= 3 天的时间间隔</span>
@@ -324,7 +324,7 @@
                     </div>
                 </div>
                 <div class="mt-2 flex-grow relative" style="min-height: {{ if .SharedLoggedInViewModel.User.NewSummary }}350px{{ else }}180px{{ end }};">
-                    <canvas id="chart-hourly" class="absolute inset-0 w-full h-full"></canvas>
+                    <div id="chart-hourly" class="absolute inset-0 w-full h-full"></div>
                 </div>
                 <div class="hidden placeholder-container flex items-center justify-center h-full flex-col">
                     <span class="text-md font-semibold text-muted mt-4">无数据</span>
@@ -414,10 +414,7 @@
     wakapiData.entities = []
     {{ end }}
 </script>
-<script src="assets/vendor/hammer.min.js"></script>
-<script src="assets/vendor/chartjs-plugin-zoom.min.js"></script>
-<script src="assets/js/summary.js?v={{ getCacheBuster }}"></script>
-<script src="assets/js/summaryColors.js?v={{ getCacheBuster }}"></script>
+<script src="assets/js/summary_echarts.js?v={{ getCacheBuster }}"></script>
 {{ end }}
 
 </body>
